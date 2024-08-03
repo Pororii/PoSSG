@@ -2,13 +2,13 @@ import { Button, Navbar } from 'flowbite-react'
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { user } from '../../../api/user/getUser'
-import { useUserStore } from '../../../stores/useUserStore'
+import { user } from '../../api/user/getUser'
+import { useUserStore } from '../../stores/useUserStore'
 import {
   getUserFromLocalStorage,
   saveUserToLocalStorage,
   removeUserFromLocalStorage,
-} from '../../../utils/localStorage'
+} from '../../utils/localStorage'
 
 const theme = {
   active: {

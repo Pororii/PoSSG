@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+
 import { MyFolderDetail2, SuccessResponse } from '../../interfaces/Interfaces'
 import { possgAxios } from '../axiosInstance'
 
@@ -6,7 +7,7 @@ import { possgAxios } from '../axiosInstance'
 export const deleteFile = async (
   token: string,
   fileData: MyFolderDetail2,
-): Promise<AxiosResponse<SuccessResponse, any> | null> => {
+): Promise<AxiosResponse<SuccessResponse> | null> => {
   const response = await possgAxios.post('community/file-remove', fileData, {
     headers: { Authorization: `Bearer ${token}` },
   })

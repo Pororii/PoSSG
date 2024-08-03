@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+
 import { MyFolder2, MyFolderDetail } from '../../interfaces/Interfaces'
 import { possgAxios } from '../axiosInstance'
 
@@ -6,7 +7,7 @@ import { possgAxios } from '../axiosInstance'
 export const getMyProjectFiles = async (
   token: string,
   folder: MyFolder2,
-): Promise<AxiosResponse<MyFolderDetail, any> | null> => {
+): Promise<AxiosResponse<MyFolderDetail> | null> => {
   const response = await possgAxios.post('community/files', folder, {
     headers: { Authorization: `Bearer ${token}` },
   })

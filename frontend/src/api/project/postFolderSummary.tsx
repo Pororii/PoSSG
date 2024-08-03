@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+
 import { MyFolder2, FolderPortfolio } from '../../interfaces/Interfaces'
 import { possgAxios } from '../axiosInstance'
 
@@ -6,7 +7,7 @@ import { possgAxios } from '../axiosInstance'
 export const getFolderPortfolio = async (
   token: string,
   folder: MyFolder2,
-): Promise<AxiosResponse<FolderPortfolio, any> | null> => {
+): Promise<AxiosResponse<FolderPortfolio> | null> => {
   const response = await possgAxios.post('community/folder-portfolio', folder, {
     headers: { Authorization: `Bearer ${token}` },
   })

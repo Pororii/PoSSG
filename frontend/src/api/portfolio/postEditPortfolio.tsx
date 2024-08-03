@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+
 import { MyPortfolio, SuccessResponse } from '../../interfaces/Interfaces'
 import { possgAxios } from '../axiosInstance'
 
@@ -6,7 +7,7 @@ import { possgAxios } from '../axiosInstance'
 export const editPortfolio = async (
   token: string,
   portfolio: MyPortfolio,
-): Promise<AxiosResponse<SuccessResponse, any> | null> => {
+): Promise<AxiosResponse<SuccessResponse> | null> => {
   const response = await possgAxios.post(
     'community/edit-portfolio',
     portfolio,

@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+
 import { SuccessResponse } from '../../interfaces/Interfaces'
 import { possgAxios } from '../axiosInstance'
 
@@ -6,7 +7,7 @@ import { possgAxios } from '../axiosInstance'
 export const uploadProjectFiles = async (
   token: string,
   formData: FormData,
-): Promise<AxiosResponse<SuccessResponse, any> | null> => {
+): Promise<AxiosResponse<SuccessResponse> | null> => {
   const response = await possgAxios.post('community/upload', formData, {
     headers: {
       Authorization: `Bearer ${token}`,

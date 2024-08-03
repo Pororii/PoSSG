@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+
 import { SuccessResponse } from '../../interfaces/Interfaces'
 import { possgAxios } from '../axiosInstance'
 
@@ -7,7 +8,7 @@ export const register = async (
   password: string,
   nickname: string,
   job: string,
-): Promise<AxiosResponse<SuccessResponse, any> | null> => {
+): Promise<AxiosResponse<SuccessResponse> | null> => {
   const response = await possgAxios.post('members/signup', {
     email,
     password,

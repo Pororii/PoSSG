@@ -222,6 +222,19 @@ const Register = () => {
                         {validMessage.nicknameMessage}
                       </p>
                     </div>
+                    <div className='relative'>
+                      <p className='mb-1 ml-1 text-sm'>Preferred job</p>
+                      <input
+                        type='text'
+                        name='job'
+                        id='job'
+                        value={signupForm.job}
+                        onChange={handleChange}
+                        maxLength={20}
+                        className={`bg-gray-50 border border-gray-300 text-gray-800 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+                        placeholder='Please enter your preferred job if you have one'
+                      />
+                    </div>
                     <div>
                       <p className='mb-1 ml-1 text-sm'>Password</p>
                       <input

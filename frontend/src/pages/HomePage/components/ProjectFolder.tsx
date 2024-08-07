@@ -21,7 +21,7 @@ const ProjectFolder = (props: {
   const [titleInput, setTitleInput] = useState<string>(props.title)
   const [, setSelectedFile] = useState<File | null>(null)
   const [previewSrc, setPreviewSrc] = useState<string>(props.src)
-  const { setSelectedFolder } = useFolderStore()
+  const { setFolderInfo } = useFolderStore()
   const [openModal, setOpenModal] = useState(false)
 
   const handleFolderNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +127,7 @@ const ProjectFolder = (props: {
       title: titleInput,
       src: props.src,
     }
-    setSelectedFolder(folderInfo)
+    setFolderInfo(folderInfo)
     navigate(`/project-detail/${props.sector}/${titleInput}`)
   }
 

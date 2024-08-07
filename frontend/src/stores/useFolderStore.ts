@@ -3,11 +3,11 @@ import create from 'zustand'
 import { MyFolder } from '../interfaces/Interfaces'
 
 interface FolderState {
-  selectedFolder: MyFolder | null
-  setSelectedFolder: (folder: MyFolder | null) => void
+  folderInfo: MyFolder | null
+  setFolderInfo: (folderInfo: MyFolder | null) => void
 }
 
 export const useFolderStore = create<FolderState>(set => ({
-  selectedFolder: null,
-  setSelectedFolder: folder => set({ selectedFolder: folder }),
+  folderInfo: null,
+  setFolderInfo: folderInfo => set({ folderInfo }),
 }))

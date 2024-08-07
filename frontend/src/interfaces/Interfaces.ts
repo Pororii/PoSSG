@@ -34,6 +34,7 @@ export interface FolderData {
 }
 
 export interface MySectors extends Array<Sector> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any // 추후 수정
 }
 
@@ -88,6 +89,7 @@ export interface portfolioInfo {
 }
 
 export interface PortfolioItem {
+  id: number
   sector: string
   folderName: string
   subject: string

@@ -237,14 +237,14 @@ const ProjectDetail = () => {
                   >
                     <FaWandMagicSparkles />
                     &nbsp;
-                    <p className='text-xs'>요약</p>
+                    <p className='text-xs'>Summary</p>
                   </Button>
                   <button
                     type='submit'
                     className='bg-black text-white text-xs font-PretendardVariable font-normal rounded-md py-2 px-5 transition duration-200 ease-in-out cursor-pointer'
                     onClick={handlePopUpButtonClick}
                   >
-                    파일 업로드
+                    Upload
                   </button>
                 </div>
               </div>
@@ -252,7 +252,7 @@ const ProjectDetail = () => {
                 {isLoadingSummary ? (
                   <div className='flex justify-center items-center p-4 bg-gray-100 rounded-2xl shadow mb-4 font-semibold'>
                     <Spinner aria-label='Loading spinner' className='mr-3' />
-                    <span>로딩 중입니다. 잠시만 기다려주세요.</span>
+                    <span>Loading, please wait a moment.</span>
                   </div>
                 ) : folderPortfolio ? (
                   <>
@@ -261,7 +261,7 @@ const ProjectDetail = () => {
                       style={{ width: containerWidth }}
                       onClick={toggleDetails}
                     >
-                      내 폴더 요약 정보 확인하기!
+                      Check summary information of my folder!
                     </button>
                     {showDetails && (
                       <div className='pl-10 pr-10 pt-1 pb-3 bg-gray-100 rounded-xl shadow mb-4'>
@@ -285,7 +285,7 @@ const ProjectDetail = () => {
                           />
                         </div>
                         <p className='flex items-center text-sm font-normal text-gray-800 dark:text-gray-400'>
-                          지금 업로드한 자료들에 대한 요약을 확인해보세요!
+                          Check the summary of the materials I just uploaded!
                         </p>
                       </div>
                       <div className='flex shrink-0 items-center'>
@@ -293,7 +293,7 @@ const ProjectDetail = () => {
                           onClick={handleSummaryButtonClick}
                           className='bg-blue-500 font-semibold'
                         >
-                          요약하기
+                          Get started!
                         </Button>
                         <Banner.CollapseButton
                           color='gray'
@@ -396,15 +396,13 @@ const ProjectDetail = () => {
                       ) : (
                         <>
                           <Logo />
-                          <p className='font-medium font-PretendardVariable text-lg my-20 mb-10'>
-                            클릭 혹은 여러 파일을 이곳에 드롭하세요!
+                          <p className='font-medium text-lg my-20 mb-10'>
+                            Click or drop multiple files here!
                           </p>
-                          <p className='mb-3 font-PretendardVariable text-sm text-blue-500'>
-                            JPG,JPEG,PNG,PDF 형식만 첨부 가능합니다
+                          <p className='mb-3 text-sm text-blue-500'>
+                            Only JPG, JPEG, PNG, and PDF formats are accepted
                           </p>
-                          <p className='mb-32 font-PretendardVariable text-sm'>
-                            파일당 최대 3MB
-                          </p>
+                          <p className='mb-32 text-sm'>Maximum 3MB per file</p>
                         </>
                       )}
                       <input
@@ -416,10 +414,10 @@ const ProjectDetail = () => {
                       />
                     </label>
                     <button
-                      className={`w-full text-white text-xs font-PretendardVariable font-normal rounded-md py-3 mt-4 transition duration-200 ease-in-out cursor-pointer ${filePreviews.length ? 'bg-blue-600' : 'bg-black'}`}
+                      className={`w-full text-white text-sm font-normal rounded-md py-3 mt-4 transition duration-200 ease-in-out cursor-pointer ${filePreviews.length ? 'bg-blue-600' : 'bg-black'}`}
                       onClick={handleUploadButtonClick}
                     >
-                      업로드 하기
+                      Upload
                     </button>
                   </div>
                 )}
@@ -509,12 +507,10 @@ const ProjectDetail = () => {
                   ) : (
                     <>
                       <Logo />
-                      <p className='font-medium font-PretendardVariable text-lg my-20 mb-10'>
-                        클릭 혹은 여러 파일을 이곳에 드롭하세요!
+                      <p className='font-medium text-lg my-20 mb-10'>
+                        Click or drop multiple files here!
                       </p>
-                      <p className='mb-32 font-PretendardVariable text-sm'>
-                        파일당 최대 3MB
-                      </p>
+                      <p className='mb-32 text-sm'>Maximum 3MB per file</p>
                     </>
                   )}
                   <input
@@ -526,10 +522,10 @@ const ProjectDetail = () => {
                   />
                 </label>
                 <button
-                  className={`w-full text-white text-xs font-PretendardVariable font-normal rounded-md py-3 mt-4 transition duration-200 ease-in-out cursor-pointer ${filePreviews.length ? 'bg-blue-600' : 'bg-black'}`}
+                  className={`w-full text-white text-sm font-normal rounded-md py-3 mt-4 transition duration-200 ease-in-out cursor-pointer ${filePreviews.length ? 'bg-blue-600' : 'bg-black'}`}
                   onClick={handleUploadButtonClick}
                 >
-                  업로드 하기
+                  Upload
                 </button>
               </div>
             </div>

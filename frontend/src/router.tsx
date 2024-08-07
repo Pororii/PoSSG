@@ -4,6 +4,7 @@ import App from './App'
 import NotFound from './components/NotFoundPage/NotFound'
 import Home from './pages/HomePage/Home'
 import Login from './pages/LoginPage/Login'
+import ProjectDetail from './pages/ProjectDetailPage/ProjectDetail'
 import Register from './pages/RegisterPage/Register'
 
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: 'register',
         element: <Register />,
+      },
+      {
+        path: 'project-detail/:sector/:folderName',
+        element: <ProjectDetail />,
       },
     ],
   },

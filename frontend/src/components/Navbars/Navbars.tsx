@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { user } from '../../api/user/getUser'
-import { postEditInfo } from '../../api/user/postEditInfo'
+//import { postEditInfo } from '../../api/user/postEditInfo'
 import { useUserStore } from '../../stores/useUserStore'
 import {
   getUserFromLocalStorage,

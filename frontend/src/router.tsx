@@ -4,6 +4,7 @@ import App from './App'
 import NotFound from './components/NotFoundPage/NotFound'
 import Home from './pages/HomePage/Home'
 import Login from './pages/LoginPage/Login'
+import Portfolio from './pages/PortfolioPage/Portfolio'
 import ProjectDetail from './pages/ProjectDetailPage/ProjectDetail'
 import Register from './pages/RegisterPage/Register'
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: 'project-detail/:sector/:folderName',
         element: <ProjectDetail />,
+      },
+      {
+        path: 'portfolio',
+        element: <Portfolio />,
       },
     ],
   },

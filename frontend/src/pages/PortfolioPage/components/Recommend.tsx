@@ -38,7 +38,7 @@ const Recommend = () => {
 
   return (
     <>
-      {recommend ? (
+      {recommend?.length ? (
         <div className='flex w-screen justify-center self-stretch pb-20 pt-5 bg-gray-100 '>
           <div className='flex flex-1 flex-col md:flex-row box-border max-w-screen-xl items-center justify-start px-5 md:px-20 xl:px-10 pt-10 pb-20'>
             <div className='mt-4 pl-10 pr-10 pt-10 pb-10 bg-blue-100 shadow-lg rounded-2xl text-left text-lg mx-auto md:w-[80%]'>

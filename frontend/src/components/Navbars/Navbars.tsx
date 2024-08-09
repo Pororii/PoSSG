@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { user } from '../../api/user/getUser'
-//import { postEditInfo } from '../../api/user/postEditInfo'
+import { postEditInfo } from '../../api/user/postEditInfo'
+import { User } from '../../interfaces/Interfaces'
 import { useUserStore } from '../../stores/useUserStore'
 import {
   getUserFromLocalStorage,
@@ -24,7 +25,12 @@ const Navbars = () => {
   const [activeLink, setActiveLink] = useState<string>('')
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const [showProfilePopup, setShowProfilePopup] = useState<boolean>(false)
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+  const [nickname, setNickname] = useState<string>('')
+  const [job, setJob] = useState<string>('')
   const { user: userInfo, setUser: setUserInfo } = useUserStore()
+
+  console.log(userInfo)
 
   const token = localStorage.getItem('token')
 
@@ -38,12 +44,13 @@ const Navbars = () => {
       navigate('/login')
     }
   }
-
   const getUserNickname = async () => {
     if (token && !userInfo) {
       const userInfoResult = await user(token)
       if (userInfoResult?.data) {
         setUserInfo(userInfoResult.data)
+        setNickname(userInfoResult.data.nickname)
+        setJob(userInfoResult.data.job)
         saveUserToLocalStorage(userInfoResult.data)
       }
     }
@@ -56,6 +63,8 @@ const Navbars = () => {
       setLoggedIn(true)
       if (storedUser) {
         setUserInfo(storedUser)
+        setNickname(storedUser.nickname)
+        setJob(storedUser.job)
       } else {
         getUserNickname()
       }
@@ -66,6 +75,24 @@ const Navbars = () => {
 
   const getButtonStyle = (path: string) => {
     return path === activeLink ? theme.active.on : theme.active.off
+  }
+
+  const handleSaveButtonClick = async () => {
+    if (token) {
+      const editInfoResult = await postEditInfo(token, nickname, job)
+      if (editInfoResult?.data) {
+        setIsEditing(false)
+        const updatedUserInfo: User = {
+          ...userInfo,
+          nickname,
+          job: job,
+          email: userInfo?.email || '', // email 필드 추가
+        }
+        setUserInfo(updatedUserInfo)
+        saveUserToLocalStorage(updatedUserInfo)
+        setIsEditing(false)
+      }
+    }
   }
 
   return (
@@ -111,7 +138,7 @@ const Navbars = () => {
                 {userInfo?.nickname}
               </div>
               &nbsp;
-              <span className='list-none font-semibold cursor-pointer'>님</span>
+              <span className='list-none font-semibold cursor-pointer'></span>
               &nbsp;&nbsp;
             </div>
           )}
@@ -146,20 +173,42 @@ const Navbars = () => {
                   <path d='M12 12c2.28 0 4-1.72 4-4s-1.72-4-4-4-4 1.72-4 4 1.72 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'></path>
                 </svg>
               </div>
-              <div className='ml-8 flex flex-col items-'>
-                <h2 className='text-xl font-semibold text-black mb-2'>
-                  Nickname
-                </h2>
-                <p className='text-gray-500 mb-4'>Frontend Developer</p>
-                <button
-                  className='bg-blue-500 text-white px-20 py-1 rounded hover:bg-blue-600'
-                  onClick={() => {
-                    setShowProfilePopup(false)
-                    // 추가 동작을 여기에 작성
-                  }}
-                >
-                  Edit
-                </button>
+              <div className='ml-8 flex flex-col items-start'>
+                {isEditing ? (
+                  <>
+                    <input
+                      type='text'
+                      value={nickname}
+                      onChange={e => setNickname(e.target.value)}
+                      className='text-xl font-semibold text-black mb-2 border rounded px-2 py-1'
+                    />
+                    <input
+                      type='text'
+                      value={job}
+                      onChange={e => setJob(e.target.value)}
+                      className='text-gray-500 mb-4 border rounded px-2 py-1'
+                    />
+                    <button
+                      className='bg-blue-500 text-white px-20 py-1 rounded hover:bg-blue-600'
+                      onClick={handleSaveButtonClick}
+                    >
+                      Save
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <h2 className='text-xl font-semibold text-black mb-2'>
+                      {nickname}
+                    </h2>
+                    <p className='text-gray-500 mb-4'>{job}</p>
+                    <button
+                      className='bg-blue-500 text-white px-20 py-1 rounded hover:bg-blue-600'
+                      onClick={() => setIsEditing(true)}
+                    >
+                      Edit
+                    </button>
+                  </>
+                )}
               </div>
             </div>
             <div className='w-full border-t border-gray-300 mt-6'></div>

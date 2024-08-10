@@ -107,6 +107,3 @@ export interface GroupedPortfolio {
 export interface MyPortfolioFile {
   result: File
 }
-export interface EditResponse {
-  message: string
-}

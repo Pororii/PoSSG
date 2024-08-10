@@ -9,5 +9,6 @@ export const user = async (
   const response = await possgAxios.get('members/member', {
     headers: { Authorization: `Bearer ${token}` },
   })
+  console.log('Request data:', { response })
   return response
 }

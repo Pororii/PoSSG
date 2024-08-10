@@ -197,27 +197,27 @@ const ProjectFolder = (props: {
         onClose={() => setOpenModal(false)}
         popup
       >
-        <div className='fixed top-20 left-0 w-full h-full bg-gray-500 bg-opacity-60'></div>
+        <div className='fixed top-16 left-0 w-full h-full bg-gray-500 bg-opacity-60'></div>
         <div className='flex items-center justify-center fixed inset-0 opacity-100'>
           <div className='z-10 bg-white rounded-lg border-solid  border-black-500 p-70 flex flex-col justify-center items-center'>
             <Modal.Body>
               <div className='text-center px-10'>
                 <HiOutlineExclamationCircle className='mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-black-200' />
                 <h3 className='mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 shadow-3xl'>
-                  정말 삭제하시겠습니까?
+                  Are you sure you want to delete?
                 </h3>
                 <div className='flex justify-center gap-4'>
                   <Button
                     className='bg-gray-100 text-black w-20 hover:bg-blue-600 hover:text-white'
                     onClick={handleDeleteFolder}
                   >
-                    네
+                    Yes
                   </Button>
                   <Button
                     className='bg-gray-100 text-black w-20 hover:bg-blue-600 hover:text-white'
                     onClick={() => setOpenModal(false)}
                   >
-                    아니오
+                    No
                   </Button>
                 </div>
               </div>

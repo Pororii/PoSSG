@@ -314,7 +314,6 @@ const ProjectDetail = () => {
                       className='flex flex-col w-full pb-1'
                     >
                       <ProjectFile
-                        file_name={fileFinals.file.name}
                         name={fileFinals.name}
                         src={fileFinals.preview}
                         onDeleted={() => handleFileDeleted(fileFinals.name)}

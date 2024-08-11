@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { makePortfolio } from '../../../api/portfolio/getMakePortfolio'
 import { getPortfolio } from '../../../api/portfolio/getPortfolio'
+import { getPortfolioFile } from '../../../api/portfolio/getPortfolioFile'
 import { editPortfolio } from '../../../api/portfolio/postEditPortfolio'
 import Loading from '../../../components/Loading/Loading'
 import { GroupedPortfolio } from '../../../interfaces/Interfaces'
@@ -12,51 +13,52 @@ import { usePortfolioStore } from '../../../stores/usePortfolioStore'
 const PortfolioSection = () => {
   const token = localStorage.getItem('token')
   const { portfolio, setPortfolio, updatePortfolioItem } = usePortfolioStore()
+  const [, setPortfolioFile] = useState<File>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [groupedPortfolio, setGroupedPortfolio] = useState<GroupedPortfolio>({
-    // Activity: [
-    //   {
-    //     id: 1,
-    //     sector: 'Activity',
-    //     folderName: '봉사활동',
-    //     subject: '해외 봉사 활동',
-    //     content: '해외에서 봉사 활동을 통해 다양한 경험을 쌓았습니다.',
-    //     results: '봉사활동 인증서 획득, 리더십 향상',
-    //     overall:
-    //       '봉사활동을 통해 다양한 문화를 이해하고, 리더십을 발휘할 수 있었습니다.',
-    //   },
-    //   {
-    //     id: 2,
-    //     sector: 'Activity',
-    //     folderName: '공모전',
-    //     subject: '기술 공모전 참가',
-    //     content: '기술 공모전에 참가하여 팀 프로젝트를 수행했습니다.',
-    //     results: '3등 수상, 협업 능력 향상',
-    //     overall: '공모전을 통해 팀워크와 기술 역량을 높일 수 있었습니다.',
-    //   },
-    // ],
-    // Club: [
-    //   {
-    //     id: 3,
-    //     sector: 'Club',
-    //     folderName: '동아리 활동',
-    //     subject: '컴퓨터 동아리 활동',
-    //     content: '교내 컴퓨터 동아리에서 다양한 프로젝트를 진행했습니다.',
-    //     results: '프로젝트 발표, 개발 능력 향상',
-    //     overall:
-    //       '동아리 활동을 통해 실무 능력을 향상시키고, 네트워킹을 할 수 있었습니다.',
-    //   },
-    //   {
-    //     id: 4,
-    //     sector: 'Club',
-    //     folderName: '학생회 활동',
-    //     subject: '학생회 기획부 활동',
-    //     content: '학생회 기획부에서 다양한 행사를 기획하고 운영했습니다.',
-    //     results: '행사 성공적 개최, 기획 능력 향상',
-    //     overall:
-    //       '학생회 활동을 통해 기획력과 운영 능력을 배양할 수 있었습니다.',
-    //   },
-    // ],
+    Activity: [
+      {
+        id: 1,
+        sector: 'Activity',
+        folderName: '봉사활동',
+        subject: '해외 봉사 활동',
+        content: '해외에서 봉사 활동을 통해 다양한 경험을 쌓았습니다.',
+        results: '봉사활동 인증서 획득, 리더십 향상',
+        overall:
+          '봉사활동을 통해 다양한 문화를 이해하고, 리더십을 발휘할 수 있었습니다.',
+      },
+      {
+        id: 2,
+        sector: 'Activity',
+        folderName: '공모전',
+        subject: '기술 공모전 참가',
+        content: '기술 공모전에 참가하여 팀 프로젝트를 수행했습니다.',
+        results: '3등 수상, 협업 능력 향상',
+        overall: '공모전을 통해 팀워크와 기술 역량을 높일 수 있었습니다.',
+      },
+    ],
+    Club: [
+      {
+        id: 3,
+        sector: 'Club',
+        folderName: '동아리 활동',
+        subject: '컴퓨터 동아리 활동',
+        content: '교내 컴퓨터 동아리에서 다양한 프로젝트를 진행했습니다.',
+        results: '프로젝트 발표, 개발 능력 향상',
+        overall:
+          '동아리 활동을 통해 실무 능력을 향상시키고, 네트워킹을 할 수 있었습니다.',
+      },
+      {
+        id: 4,
+        sector: 'Club',
+        folderName: '학생회 활동',
+        subject: '학생회 기획부 활동',
+        content: '학생회 기획부에서 다양한 행사를 기획하고 운영했습니다.',
+        results: '행사 성공적 개최, 기획 능력 향상',
+        overall:
+          '학생회 활동을 통해 기획력과 운영 능력을 배양할 수 있었습니다.',
+      },
+    ],
   })
   const queryClient = useQueryClient()
 
@@ -76,7 +78,7 @@ const PortfolioSection = () => {
   const fetchFile = async () => {
     if (token) {
       const successResponse = await getPortfolio(token)
-      if (successResponse && successResponse) {
+      if (successResponse) {
         setPortfolio(successResponse)
         console.log('Response Data:', successResponse)
       }
@@ -119,13 +121,23 @@ const PortfolioSection = () => {
     editMutation.mutate()
   }
 
+  const handleDownload = async () => {
+    if (token) {
+      const successResponse = await getPortfolioFile(token)
+      if (successResponse && successResponse.data.result) {
+        setPortfolioFile(successResponse.data.result)
+        console.log('Response Data:', successResponse.data)
+      }
+    }
+  }
+
   return (
     <>
       {isLoading ? (
         <Loading />
       ) : (
         <>
-          {portfolio.length ? (
+          {portfolio ? (
             <div className='bg-gray-100 flex w-full justify-center text-gray-700 pt-20 mt-10'>
               <div className='flex flex-1 flex-col md:flex-row max-w-7xl items-center justify-start px-5 md:px-20 xl:px-10 py-10'>
                 <div className='flex-1 mx-4 text-gray-700'>
@@ -217,12 +229,20 @@ const PortfolioSection = () => {
                           </div>
                         ),
                       )}
-                      <Button
-                        onClick={handleSave}
-                        className='mt-4 bg-blue-600 hover:bg-blue-700'
-                      >
-                        Save
-                      </Button>
+                      <div className='flex'>
+                        <Button
+                          onClick={handleSave}
+                          className='mt-4 mr-1 bg-blue-600 hover:bg-blue-700'
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          onClick={handleDownload}
+                          className='mt-4 bg-blue-600 hover:bg-blue-700'
+                        >
+                          Download
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -123,8 +123,8 @@ const PortfolioSection = () => {
   const handleDownload = async () => {
     if (token) {
       const successResponse = await getPortfolioFile(token)
-      if (successResponse && successResponse.data.result) {
-        const fileData = successResponse.data.result
+      if (successResponse && successResponse.data) {
+        const fileData = successResponse.data
 
         const blob = new Blob([fileData], { type: 'application/pdf' }) // 파일 유형에 따라 'application/pdf', 'image/png' 등
         const url = URL.createObjectURL(blob)

@@ -264,13 +264,16 @@ const ProjectDetail = () => {
                       Check summary information of my folder!
                     </button>
                     {showDetails && (
-                      <div className='pl-10 pr-10 pt-1 pb-3 bg-gray-100 rounded-xl shadow mb-4'>
-                        <div className='mt-3' style={{ width: containerWidth }}>
-                          <span className='block text-sm'>
-                            {folderPortfolio}
-                          </span>
-                        </div>
+                      <div className='pl-10 pr-10 pt-3 pb-3 bg-gray-100 rounded-xl shadow mb-4'>
+                        {/* <div className='mt-3' style={{ width: containerWidth }}> */}
+                        <span
+                          className='block text-sm'
+                          style={{ width: '100%' }}
+                        >
+                          {folderPortfolio}
+                        </span>
                       </div>
+                      // </div>
                     )}
                   </>
                 ) : (

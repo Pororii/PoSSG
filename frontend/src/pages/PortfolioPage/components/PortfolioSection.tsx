@@ -45,6 +45,10 @@ const PortfolioSection = () => {
   }, [token])
 
   useEffect(() => {
+    console.log('Updated Portfolio:', portfolio)
+  }, [portfolio])
+
+  useEffect(() => {
     if (portfolio && portfolio.length > 0) {
       const groupBySector = portfolio.reduce<GroupedPortfolio>((acc, item) => {
         if (!acc[item.sector]) {
@@ -82,8 +86,14 @@ const PortfolioSection = () => {
     editMutation.mutate()
   }
 
-  const handleMakePortfolio = () => {
-    makePortfolioButton()
+  const handleMakePortfolio = async () => {
+    if (token) {
+      const successResponse = await makePortfolio(token)
+      if (successResponse && successResponse.data) {
+        setPortfolio(successResponse.data)
+        console.log('Response Data:', successResponse.data)
+      }
+    }
   }
 
   const handleDownload = async () => {

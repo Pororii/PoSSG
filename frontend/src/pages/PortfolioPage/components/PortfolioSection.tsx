@@ -12,53 +12,9 @@ import { usePortfolioStore } from '../../../stores/usePortfolioStore'
 
 const PortfolioSection = () => {
   const token = localStorage.getItem('token')
-  const { portfolio, setPortfolio, updatePortfolioItem } = usePortfolioStore()
+  const { portfolio, setPortfolio } = usePortfolioStore()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [groupedPortfolio, setGroupedPortfolio] = useState<GroupedPortfolio>({
-    // Activity: [
-    //   {
-    //     id: 1,
-    //     sector: 'Activity',
-    //     folderName: '봉사활동',
-    //     subject: '해외 봉사 활동',
-    //     content: '해외에서 봉사 활동을 통해 다양한 경험을 쌓았습니다.',
-    //     results: '봉사활동 인증서 획득, 리더십 향상',
-    //     overall:
-    //       '봉사활동을 통해 다양한 문화를 이해하고, 리더십을 발휘할 수 있었습니다.',
-    //   },
-    //   {
-    //     id: 2,
-    //     sector: 'Activity',
-    //     folderName: '공모전',
-    //     subject: '기술 공모전 참가',
-    //     content: '기술 공모전에 참가하여 팀 프로젝트를 수행했습니다.',
-    //     results: '3등 수상, 협업 능력 향상',
-    //     overall: '공모전을 통해 팀워크와 기술 역량을 높일 수 있었습니다.',
-    //   },
-    // ],
-    // Club: [
-    //   {
-    //     id: 3,
-    //     sector: 'Club',
-    //     folderName: '동아리 활동',
-    //     subject: '컴퓨터 동아리 활동',
-    //     content: '교내 컴퓨터 동아리에서 다양한 프로젝트를 진행했습니다.',
-    //     results: '프로젝트 발표, 개발 능력 향상',
-    //     overall:
-    //       '동아리 활동을 통해 실무 능력을 향상시키고, 네트워킹을 할 수 있었습니다.',
-    //   },
-    //   {
-    //     id: 4,
-    //     sector: 'Club',
-    //     folderName: '학생회 활동',
-    //     subject: '학생회 기획부 활동',
-    //     content: '학생회 기획부에서 다양한 행사를 기획하고 운영했습니다.',
-    //     results: '행사 성공적 개최, 기획 능력 향상',
-    //     overall:
-    //       '학생회 활동을 통해 기획력과 운영 능력을 배양할 수 있었습니다.',
-    //   },
-    // ],
-  })
+  const [groupedPortfolio, setGroupedPortfolio] = useState<GroupedPortfolio>({})
   const queryClient = useQueryClient()
 
   const makePortfolioButton = async () => {
@@ -89,6 +45,10 @@ const PortfolioSection = () => {
   }, [token])
 
   useEffect(() => {
+    console.log('Updated Portfolio:', portfolio)
+  }, [portfolio])
+
+  useEffect(() => {
     if (portfolio && portfolio.length > 0) {
       const groupBySector = portfolio.reduce<GroupedPortfolio>((acc, item) => {
         if (!acc[item.sector]) {
@@ -102,12 +62,18 @@ const PortfolioSection = () => {
     }
   }, [portfolio])
 
-  const handleChange = (id: number, field: string, value: string) => {
-    const updatedItem = {
-      ...portfolio.find(item => item.id === id)!,
-      [field]: value,
-    }
-    updatePortfolioItem(updatedItem)
+  const handleChange = (
+    id: number,
+    field: string,
+    value: string,
+    folderName: string,
+  ) => {
+    const updatedPortfolio = portfolio.map(item =>
+      item.id === id && item.folderName === folderName
+        ? { ...item, [field]: value }
+        : item,
+    )
+    setPortfolio(updatedPortfolio)
   }
 
   const editMutation = useMutation(() => editPortfolio(token!, portfolio), {
@@ -118,6 +84,16 @@ const PortfolioSection = () => {
 
   const handleSave = () => {
     editMutation.mutate()
+  }
+
+  const handleMakePortfolio = async () => {
+    if (token) {
+      const successResponse = await makePortfolio(token)
+      if (successResponse && successResponse.data) {
+        setPortfolio(successResponse.data)
+        console.log('Response Data:', successResponse.data)
+      }
+    }
   }
 
   const handleDownload = async () => {
@@ -164,9 +140,6 @@ const PortfolioSection = () => {
                             {items.map(item => (
                               <div key={item.id}>
                                 <div>
-                                  <label htmlFor={`subject-${item.id}`}>
-                                    Subject
-                                  </label>
                                   <input
                                     type='text'
                                     id={`subject-${item.id}`}
@@ -176,17 +149,20 @@ const PortfolioSection = () => {
                                         item.id,
                                         'subject',
                                         e.target.value,
+                                        item.folderName,
                                       )
                                     }
-                                    className='w-full mb-2 border-none'
+                                    className='w-full mb-2 border-none font-semibold text-lg whitespace-pre-wrap'
                                   />
                                 </div>
                                 <div>
-                                  <label htmlFor={`content-${item.id}`}>
-                                    Content
+                                  <label
+                                    htmlFor={`content-${item.id}`}
+                                    className='font-semibold ml-3'
+                                  >
+                                    Content :
                                   </label>
-                                  <input
-                                    type='text'
+                                  <textarea
                                     id={`content-${item.id}`}
                                     value={item.content}
                                     onChange={e =>
@@ -194,17 +170,21 @@ const PortfolioSection = () => {
                                         item.id,
                                         'content',
                                         e.target.value,
+                                        item.folderName,
                                       )
                                     }
-                                    className='w-full mb-2 border-none'
+                                    className='w-full mb-2 border-none whitespace-pre-wrap text-justify'
+                                    rows={5}
                                   />
                                 </div>
                                 <div>
-                                  <label htmlFor={`results-${item.id}`}>
-                                    Results
+                                  <label
+                                    htmlFor={`results-${item.id}`}
+                                    className='font-semibold ml-3'
+                                  >
+                                    Results :
                                   </label>
-                                  <input
-                                    type='text'
+                                  <textarea
                                     id={`results-${item.id}`}
                                     value={item.results}
                                     onChange={e =>
@@ -212,17 +192,21 @@ const PortfolioSection = () => {
                                         item.id,
                                         'results',
                                         e.target.value,
+                                        item.folderName,
                                       )
                                     }
-                                    className='w-full mb-2 border-none'
+                                    className='w-full mb-2 border-none whitespace-pre-wrap text-justify'
+                                    rows={5}
                                   />
                                 </div>
                                 <div>
-                                  <label htmlFor={`overall-${item.id}`}>
-                                    Overall
+                                  <label
+                                    htmlFor={`overall-${item.id}`}
+                                    className='font-semibold ml-3'
+                                  >
+                                    Overall :
                                   </label>
-                                  <input
-                                    type='text'
+                                  <textarea
                                     id={`overall-${item.id}`}
                                     value={item.overall}
                                     onChange={e =>
@@ -230,9 +214,11 @@ const PortfolioSection = () => {
                                         item.id,
                                         'overall',
                                         e.target.value,
+                                        item.folderName,
                                       )
                                     }
-                                    className='w-full mb-2 border-none'
+                                    className='w-full mb-2 border-none whitespace-pre-wrap text-justify'
+                                    rows={5}
                                   />
                                 </div>
                                 <p className='border-b-2 pb-5 mb-5'></p>
@@ -250,9 +236,15 @@ const PortfolioSection = () => {
                         </Button>
                         <Button
                           onClick={handleDownload}
-                          className='mt-4 bg-blue-600 hover:bg-blue-700'
+                          className='mt-4 mr-1 bg-blue-600 hover:bg-blue-700'
                         >
                           Download
+                        </Button>
+                        <Button
+                          onClick={handleMakePortfolio}
+                          className='mt-4 bg-blue-600 hover:bg-blue-700'
+                        >
+                          Make New
                         </Button>
                       </div>
                     </div>

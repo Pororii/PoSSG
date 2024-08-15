@@ -62,10 +62,10 @@ const PortfolioSection = () => {
     id: number,
     field: string,
     value: string,
-    subject: string,
+    folderName: string,
   ) => {
     const updatedPortfolio = portfolio.map(item =>
-      item.id === id && item.subject === subject
+      item.id === id && item.folderName === folderName
         ? { ...item, [field]: value }
         : item,
     )
@@ -139,7 +139,7 @@ const PortfolioSection = () => {
                                         item.id,
                                         'subject',
                                         e.target.value,
-                                        item.subject,
+                                        item.folderName,
                                       )
                                     }
                                     className='w-full mb-2 border-none font-semibold text-lg whitespace-pre-wrap'
@@ -160,7 +160,7 @@ const PortfolioSection = () => {
                                         item.id,
                                         'content',
                                         e.target.value,
-                                        item.subject,
+                                        item.folderName,
                                       )
                                     }
                                     className='w-full mb-2 border-none whitespace-pre-wrap text-justify'
@@ -182,7 +182,7 @@ const PortfolioSection = () => {
                                         item.id,
                                         'results',
                                         e.target.value,
-                                        item.subject,
+                                        item.folderName,
                                       )
                                     }
                                     className='w-full mb-2 border-none whitespace-pre-wrap text-justify'
@@ -204,7 +204,7 @@ const PortfolioSection = () => {
                                         item.id,
                                         'overall',
                                         e.target.value,
-                                        item.subject,
+                                        item.folderName,
                                       )
                                     }
                                     className='w-full mb-2 border-none whitespace-pre-wrap text-justify'

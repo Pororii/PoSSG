@@ -270,7 +270,7 @@ const ProjectDetail = () => {
                         {/* <div className='mt-3' style={{ width: containerWidth }}> */}
                         <span
                           className='block text-sm'
-                          style={{ width: '100%' }}
+                          style={{ width: '100%', textAlign: 'justify' }}
                         >
                           {folderPortfolio}
                         </span>

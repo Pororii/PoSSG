@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react'
 import arrowDropDownLine from '@iconify-icons/ri/arrow-drop-down-line'
 import { Button, Navbar } from 'flowbite-react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { user } from '../../api/user/getUser'
@@ -27,6 +27,7 @@ const Navbars: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const { user: userInfo, setUser: setUserInfo } = useUserStore()
   const [isMyInfoCardOpen, setIsMyInfoCardOpen] = useState(false)
+  const modalRef = useRef<HTMLDivElement>(null)
 
   const token = localStorage.getItem('token')
 
@@ -50,6 +51,15 @@ const Navbars: React.FC = () => {
       }
     }
   }
+  const handleMyInfo = () => {
+    isMyInfoCardOpen ? setIsMyInfoCardOpen(false) : setIsMyInfoCardOpen(true)
+  }
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      setIsMyInfoCardOpen(false)
+    }
+  }
 
   useEffect(() => {
     setActiveLink(location.pathname)
@@ -65,6 +75,24 @@ const Navbars: React.FC = () => {
       setLoggedIn(false)
     }
   }, [location.pathname, token])
+
+  useEffect(() => {
+    if (isMyInfoCardOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMyInfoCardOpen])
+
+  useEffect(() => {
+    if (!loggedIn) {
+      setIsMyInfoCardOpen(false)
+    }
+  }, [loggedIn])
 
   const getButtonStyle = (path: string) => {
     return path === activeLink ? theme.active.on : theme.active.off
@@ -104,7 +132,7 @@ const Navbars: React.FC = () => {
                 className='flex items-center space-x-3 cursor-pointer'
                 role='button'
                 tabIndex={0}
-                onClick={() => setIsMyInfoCardOpen(true)}
+                onClick={handleMyInfo}
                 onKeyDown={e => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     setIsMyInfoCardOpen(true)

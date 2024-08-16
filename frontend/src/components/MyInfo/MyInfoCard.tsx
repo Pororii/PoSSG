@@ -24,9 +24,7 @@ const MyInfoCard = ({
   const [job, setJob] = useState<string>('')
 
   const [isEditing, setIsEditing] = useState<boolean>(false)
-  const [loggedIn, setLoggedIn] = useState<boolean>(
-    !!localStorage.getItem('token'),
-  )
+  const [loggedIn] = useState<boolean>(!!localStorage.getItem('token'))
   const token = localStorage.getItem('token')
 
   // UseEffect to initialize nickname and job when userInfo is available
@@ -35,7 +33,7 @@ const MyInfoCard = ({
       setNickname(userInfo.nickname || '')
       setJob(userInfo.job || '')
     }
-  }, [userInfo])
+  }, [userInfo, loggedIn])
 
   const handleSaveButtonClick = async () => {
     if (token) {
@@ -54,16 +52,25 @@ const MyInfoCard = ({
     }
   }
 
-  const handleLoginButtonClick = () => {
-    if (loggedIn) {
-      localStorage.removeItem('token')
-      removeUserFromLocalStorage()
-      setUserInfo(null)
-      setLoggedIn(false)
-      navigate('/')
-    } else {
-      navigate('/login')
-    }
+  // const handleLoginButtonClick = () => {
+  //   if (loggedIn) {
+  //     localStorage.removeItem('token')
+  //     removeUserFromLocalStorage()
+  //     setUserInfo(null)
+  //     setLoggedIn(false)
+  //     //onRequestClose() // 로그아웃 시 모달 닫기
+  //     navigate('/login')
+  //   } else {
+  //     navigate('/login')
+  //   }
+  // }
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    removeUserFromLocalStorage()
+    setUserInfo(null)
+    onRequestClose() // 로그아웃 시 모달 닫기
+    navigate('/login') // 로그인 페이지로 리디렉션
   }
 
   return (
@@ -132,9 +139,9 @@ const MyInfoCard = ({
         <div className='flex justify-center '>
           <button
             className='text-black hover:text-gray-700 pw-10 py-1 w-full'
-            onClick={handleLoginButtonClick}
+            onClick={handleLogout}
           >
-            {loggedIn ? 'Logout' : 'Login'}
+            Logout
           </button>
         </div>
       </div>

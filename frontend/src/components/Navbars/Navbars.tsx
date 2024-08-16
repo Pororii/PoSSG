@@ -79,6 +79,7 @@ const Navbars: React.FC = () => {
   useEffect(() => {
     if (isMyInfoCardOpen) {
       document.addEventListener('mousedown', handleClickOutside)
+      console.log('마우스 바깥쪽')
     } else {
       document.removeEventListener('mousedown', handleClickOutside)
     }

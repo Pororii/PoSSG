@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Modal from 'react-modal'
 import { useNavigate } from 'react-router-dom'
 
@@ -19,6 +19,8 @@ const MyInfoCard = ({
   const { user: userInfo, setUser: setUserInfo } = useUserStore()
   const navigate = useNavigate()
 
+  const modalRef = useRef<HTMLDivElement>(null)
+
   // State to manage nickname and job
   const [nickname, setNickname] = useState<string>('')
   const [job, setJob] = useState<string>('')
@@ -34,6 +36,26 @@ const MyInfoCard = ({
       setJob(userInfo.job || '')
     }
   }, [userInfo, loggedIn])
+
+  // 외부 클릭 시 모달 닫기 로직
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        onRequestClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleOutsideClick)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [isOpen, onRequestClose])
 
   const handleSaveButtonClick = async () => {
     if (token) {
@@ -52,19 +74,6 @@ const MyInfoCard = ({
     }
   }
 
-  // const handleLoginButtonClick = () => {
-  //   if (loggedIn) {
-  //     localStorage.removeItem('token')
-  //     removeUserFromLocalStorage()
-  //     setUserInfo(null)
-  //     setLoggedIn(false)
-  //     //onRequestClose() // 로그아웃 시 모달 닫기
-  //     navigate('/login')
-  //   } else {
-  //     navigate('/login')
-  //   }
-  // }
-
   const handleLogout = () => {
     localStorage.removeItem('token')
     removeUserFromLocalStorage()
@@ -77,10 +86,14 @@ const MyInfoCard = ({
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      className='right-4 top-0 mt-20 mr-10 fixed rounded-lg ml-2 mr-2 shadow-inner outline outline-1 outline-neutral-200 z-10'
+      shouldCloseOnOverlayClick={true}
+      className='modal-content right-4 top-0 mt-20 mr-10 fixed rounded-lg ml-2 mr-2 shadow-inner outline outline-1 outline-neutral-200 z-10'
       overlayClassName='bg-transparent'
     >
-      <div className='bg-white rounded-lg shadow-lg p-6 w-[24rem] h-78 flex flex-col justify-between'>
+      <div
+        ref={modalRef}
+        className='bg-white rounded-lg shadow-lg p-6 w-[24rem] h-78 flex flex-col justify-between'
+      >
         <div>
           <h2 className='text-lg font-bold text-gray-700 mb-4'>My Info</h2>
         </div>

@@ -193,6 +193,8 @@ const ProjectDetail = () => {
 
   const handleFileDeleted = (fileName: string) => {
     setFileFinals(prevFiles => prevFiles.filter(file => file.name !== fileName))
+    fetchFiles()
+    console.log('파일 삭제하고 다시 로딩')
   }
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react'
 import arrowDropDownLine from '@iconify-icons/ri/arrow-drop-down-line'
 import { Button, Navbar } from 'flowbite-react'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { user } from '../../api/user/getUser'
@@ -27,7 +27,7 @@ const Navbars: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const { user: userInfo, setUser: setUserInfo } = useUserStore()
   const [isMyInfoCardOpen, setIsMyInfoCardOpen] = useState(false)
-  const modalRef = useRef<HTMLDivElement>(null)
+  //const modalRef = useRef<HTMLDivElement>(null)
 
   const token = localStorage.getItem('token')
 
@@ -51,14 +51,14 @@ const Navbars: React.FC = () => {
       }
     }
   }
-  const handleMyInfo = () => {
-    isMyInfoCardOpen ? setIsMyInfoCardOpen(false) : setIsMyInfoCardOpen(true)
-  }
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      setIsMyInfoCardOpen(false)
-    }
+  const handleMyInfo = () => {
+    setIsMyInfoCardOpen(prevState => {
+      const newState = !prevState
+      console.log('이전 상태:', prevState)
+      console.log('새 상태:', newState)
+      return newState
+    })
   }
 
   useEffect(() => {
@@ -77,24 +77,14 @@ const Navbars: React.FC = () => {
   }, [location.pathname, token])
 
   useEffect(() => {
-    if (isMyInfoCardOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      console.log('마우스 바깥쪽')
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isMyInfoCardOpen])
-
-  useEffect(() => {
     if (!loggedIn) {
       setIsMyInfoCardOpen(false)
     }
   }, [loggedIn])
 
+  useEffect(() => {
+    console.log('오픈 상태', isMyInfoCardOpen)
+  }, [isMyInfoCardOpen])
   const getButtonStyle = (path: string) => {
     return path === activeLink ? theme.active.on : theme.active.off
   }

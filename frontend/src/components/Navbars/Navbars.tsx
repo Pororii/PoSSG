@@ -27,6 +27,7 @@ const Navbars: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const { user: userInfo, setUser: setUserInfo } = useUserStore()
   const [isMyInfoCardOpen, setIsMyInfoCardOpen] = useState(false)
+  //const modalRef = useRef<HTMLDivElement>(null)
 
   const token = localStorage.getItem('token')
 
@@ -51,6 +52,13 @@ const Navbars: React.FC = () => {
     }
   }
 
+  const handleMyInfo = () => {
+    setIsMyInfoCardOpen(prevState => {
+      const newState = !prevState
+      return newState
+    })
+  }
+
   useEffect(() => {
     setActiveLink(location.pathname)
     const storedUser = getUserFromLocalStorage()
@@ -65,6 +73,12 @@ const Navbars: React.FC = () => {
       setLoggedIn(false)
     }
   }, [location.pathname, token])
+
+  useEffect(() => {
+    if (!loggedIn) {
+      setIsMyInfoCardOpen(false)
+    }
+  }, [loggedIn])
 
   const getButtonStyle = (path: string) => {
     return path === activeLink ? theme.active.on : theme.active.off
@@ -104,7 +118,7 @@ const Navbars: React.FC = () => {
                 className='flex items-center space-x-3 cursor-pointer'
                 role='button'
                 tabIndex={0}
-                onClick={() => setIsMyInfoCardOpen(true)}
+                onClick={handleMyInfo}
                 onKeyDown={e => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     setIsMyInfoCardOpen(true)

@@ -9,8 +9,9 @@ import 'react-pdf/dist/esm/Page/TextLayer.css'
 
 import router from './router'
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+// const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 const queryClient = new QueryClient()
 
 // 모달의 접근성을 위해 앱 루트를 설정합니다.

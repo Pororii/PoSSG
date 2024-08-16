@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Modal from 'react-modal'
 import { useNavigate } from 'react-router-dom'
 
@@ -19,14 +19,14 @@ const MyInfoCard = ({
   const { user: userInfo, setUser: setUserInfo } = useUserStore()
   const navigate = useNavigate()
 
+  const modalRef = useRef<HTMLDivElement>(null)
+
   // State to manage nickname and job
   const [nickname, setNickname] = useState<string>('')
   const [job, setJob] = useState<string>('')
 
   const [isEditing, setIsEditing] = useState<boolean>(false)
-  const [loggedIn, setLoggedIn] = useState<boolean>(
-    !!localStorage.getItem('token'),
-  )
+  const [loggedIn] = useState<boolean>(!!localStorage.getItem('token'))
   const token = localStorage.getItem('token')
 
   // UseEffect to initialize nickname and job when userInfo is available
@@ -35,7 +35,37 @@ const MyInfoCard = ({
       setNickname(userInfo.nickname || '')
       setJob(userInfo.job || '')
     }
-  }, [userInfo])
+  }, [userInfo, loggedIn])
+
+  // 외부 클릭 시 모달 닫기 로직
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      // 클릭한 요소가 header인지 확인
+      const navbarElement = document.querySelector(
+        '.fixed.left-0.right-0.top-0.z-50.py-3',
+      )
+
+      // header나 header 내부 요소를 클릭했으면 상태 변경을 막음
+      if (navbarElement && navbarElement.contains(event.target as Node)) {
+        return
+      }
+
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        onRequestClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleOutsideClick)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [isOpen, onRequestClose])
 
   const handleSaveButtonClick = async () => {
     if (token) {
@@ -54,26 +84,26 @@ const MyInfoCard = ({
     }
   }
 
-  const handleLoginButtonClick = () => {
-    if (loggedIn) {
-      localStorage.removeItem('token')
-      removeUserFromLocalStorage()
-      setUserInfo(null)
-      setLoggedIn(false)
-      navigate('/')
-    } else {
-      navigate('/login')
-    }
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    removeUserFromLocalStorage()
+    setUserInfo(null)
+    onRequestClose() // 로그아웃 시 모달 닫기
+    navigate('/login') // 로그인 페이지로 리디렉션
   }
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      className='right-4 top-0 mt-20 mr-10 fixed rounded-lg ml-2 mr-2 shadow-inner outline outline-1 outline-neutral-200 z-10'
+      shouldCloseOnOverlayClick={true}
+      className='modal-content right-4 top-0 mt-20 mr-10 fixed rounded-lg ml-2 mr-2 shadow-inner outline outline-1 outline-neutral-200 z-10'
       overlayClassName='bg-transparent'
     >
-      <div className='bg-white rounded-lg shadow-lg p-6 w-[24rem] h-78 flex flex-col justify-between'>
+      <div
+        ref={modalRef}
+        className='bg-white rounded-lg shadow-lg p-6 w-[24rem] h-78 flex flex-col justify-between'
+      >
         <div>
           <h2 className='text-lg font-bold text-gray-700 mb-4'>My Info</h2>
         </div>
@@ -132,9 +162,9 @@ const MyInfoCard = ({
         <div className='flex justify-center '>
           <button
             className='text-black hover:text-gray-700 pw-10 py-1 w-full'
-            onClick={handleLoginButtonClick}
+            onClick={handleLogout}
           >
-            {loggedIn ? 'Logout' : 'Login'}
+            Logout
           </button>
         </div>
       </div>

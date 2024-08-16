@@ -160,6 +160,8 @@ const Home = () => {
         })
       }
     }
+    console.log('폴더 추가')
+    console.log(folders)
   }
 
   const handleFolderDeleted = (sector: string, deletedFolderTitle: string) => {
@@ -175,6 +177,8 @@ const Home = () => {
         return folder
       }),
     )
+    fetchFolders()
+    console.log('폴더 삭제 후 재로딩')
 
     console.log(folders)
   }

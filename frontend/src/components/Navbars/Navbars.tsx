@@ -55,8 +55,6 @@ const Navbars: React.FC = () => {
   const handleMyInfo = () => {
     setIsMyInfoCardOpen(prevState => {
       const newState = !prevState
-      console.log('이전 상태:', prevState)
-      console.log('새 상태:', newState)
       return newState
     })
   }
@@ -82,9 +80,6 @@ const Navbars: React.FC = () => {
     }
   }, [loggedIn])
 
-  useEffect(() => {
-    console.log('오픈 상태', isMyInfoCardOpen)
-  }, [isMyInfoCardOpen])
   const getButtonStyle = (path: string) => {
     return path === activeLink ? theme.active.on : theme.active.off
   }

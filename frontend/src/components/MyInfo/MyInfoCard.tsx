@@ -47,7 +47,6 @@ const MyInfoCard = ({
 
       // header나 header 내부 요소를 클릭했으면 상태 변경을 막음
       if (navbarElement && navbarElement.contains(event.target as Node)) {
-        console.log('Clicked inside Navbar')
         return
       }
 
@@ -55,7 +54,6 @@ const MyInfoCard = ({
         modalRef.current &&
         !modalRef.current.contains(event.target as Node)
       ) {
-        console.log('Clicked outside Modal')
         onRequestClose()
       }
     }
@@ -68,24 +66,6 @@ const MyInfoCard = ({
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [isOpen, onRequestClose])
-
-  // const handleClickOutside = (event: MouseEvent) => {
-  //   // 클릭한 요소가 header인지 확인
-  //   const navbarElement = document.querySelector(
-  //     '.fixed.left-0.right-0.top-0.z-50.py-3',
-  //   )
-
-  //   // header나 header 내부 요소를 클릭했으면 상태 변경을 막음
-  //   if (navbarElement && navbarElement.contains(event.target as Node)) {
-  //     console.log('Clicked inside Navbar')
-  //     return
-  //   }
-
-  //   if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-  //     console.log('Clicked outside Modal')
-  //     onRequestClose()
-  //   }
-  // }
 
   const handleSaveButtonClick = async () => {
     if (token) {

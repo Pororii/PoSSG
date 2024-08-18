@@ -13,7 +13,7 @@ const HeroSection = () => {
       <img
         className='flex w-full'
         alt='herosection'
-        src={`/img/Herosection_global.png`}
+        src={`/img/herosection_final.png`}
       />
       <br></br>
       <br></br>

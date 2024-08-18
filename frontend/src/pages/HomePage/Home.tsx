@@ -33,7 +33,7 @@ const Home = () => {
   const [containerWidth, setContainerWidth] = useState<number>(960)
   const [error, setError] = useState<string | null>(null)
   const [, setLoggedIn] = useState(false)
-  const [showHeroSection, setShowHeroSection] = useState(false) // 나중에 true로 변경
+  const [showHeroSection, setShowHeroSection] = useState(true)
 
   const fetchFolders = async () => {
     if (token) {

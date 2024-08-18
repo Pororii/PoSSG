@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react'
 import PortfolioSection from './components/PortfolioSection'
 import Recommend from './components/Recommend'
 import Footer from '../../components/Footer/Footer'
+import HeroSection from '../../components/HeroSection/HeroSection'
 
 const Portfolio = () => {
   const token = localStorage.getItem('token')
-  const [, setShowHeroSection] = useState(true)
+  const [showHeroSection, setShowHeroSection] = useState(true)
   const [, setLoggedIn] = useState(false)
 
   useEffect(() => {
@@ -20,9 +21,17 @@ const Portfolio = () => {
 
   return (
     <>
-      <PortfolioSection />
-      <Recommend />
-      <Footer />
+      {showHeroSection ? (
+        <>
+          <HeroSection />
+        </>
+      ) : (
+        <>
+          <PortfolioSection />
+          <Recommend />
+          <Footer />
+        </>
+      )}
     </>
   )
 }

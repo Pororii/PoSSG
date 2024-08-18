@@ -2,13 +2,13 @@ import { Button } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { FaSpinner } from 'react-icons/fa'
 
-import { getAskRecommend } from '../../../api/portfolio/getAskRecommend'
+// import { getAskRecommend } from '../../../api/portfolio/getAskRecommend'
 import { getRecommend } from '../../../api/portfolio/getRecommend'
 
 const Recommend = () => {
   const token = localStorage.getItem('token')
   const [recommend, setRecommend] = useState<string[]>()
-  const [isRecommendLoading, setIsRecommendLoading] = useState<boolean>(false) // 직무 추천 로딩 상태 추가
+  // const [isRecommendLoading, setIsRecommendLoading] = useState<boolean>(false) // 직무 추천 로딩 상태 추가
 
   const fetchRecommend = async () => {
     if (token) {
@@ -20,17 +20,17 @@ const Recommend = () => {
     }
   }
 
-  const askRecommend = async () => {
-    setIsRecommendLoading(true)
-    if (token) {
-      const successResponse = await getAskRecommend(token)
-      if (successResponse && successResponse.data) {
-        setRecommend(successResponse.data.message.split('직무:').slice(1))
-        console.log(successResponse.data.message)
-        setIsRecommendLoading(false)
-      }
-    }
-  }
+  // const askRecommend = async () => {
+  //   setIsRecommendLoading(true)
+  //   if (token) {
+  //     const successResponse = await getAskRecommend(token)
+  //     if (successResponse && successResponse.data) {
+  //       setRecommend(successResponse.data.message.split('직무:').slice(1))
+  //       console.log(successResponse.data.message)
+  //       setIsRecommendLoading(false)
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     fetchRecommend()
@@ -76,12 +76,12 @@ const Recommend = () => {
                   <br />
                   <br />
                   <div className='flex justify-center items-center pb-20'>
-                    {isRecommendLoading ? (
-                      <Button className='tracking-tighter border-none font-bold px-3 bg-blue-600 hover:bg-blue-700'>
-                        <FaSpinner className='animate-spin w-8 h-8 text-white py-2 mr-1' />
-                        <p className='text-base py-2'>Please wait a moment!</p>
-                      </Button>
-                    ) : (
+                    {/* {isRecommendLoading ? ( */}
+                    <Button className='tracking-tighter border-none font-bold px-3 bg-blue-600 hover:bg-blue-700'>
+                      <FaSpinner className='animate-spin w-8 h-8 text-white py-2 mr-1' />
+                      <p className='text-base py-2'>Please wait a moment!</p>
+                    </Button>
+                    {/* ) : (
                       <Button
                         className='tracking-tighter border-none font-bold px-3 bg-blue-600 hover:bg-blue-700'
                         onClick={askRecommend}
@@ -90,7 +90,7 @@ const Recommend = () => {
                           Getting Job Recommendations
                         </p>
                       </Button>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>

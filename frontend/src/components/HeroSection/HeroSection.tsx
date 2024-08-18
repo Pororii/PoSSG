@@ -10,7 +10,7 @@ const HeroSection = () => {
 
   return (
     <div className='text-center'>
-      <img className='flex w-full' src={`/img/Herosection_global.png`} />
+      <img className='flex w-full' src={`/img/Herosection.jpg`} />
       <br></br>
       <br></br>
       <br></br>

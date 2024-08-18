@@ -1,5 +1,6 @@
 import { Button } from 'flowbite-react'
 import { useEffect, useState } from 'react'
+import { FaFilePdf } from 'react-icons/fa6'
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makePortfolio } from '../../../api/portfolio/getMakePortfolio'
@@ -86,16 +87,6 @@ const PortfolioSection = () => {
     editMutation.mutate()
   }
 
-  const handleMakePortfolio = async () => {
-    if (token) {
-      const successResponse = await makePortfolio(token)
-      if (successResponse && successResponse.data) {
-        setPortfolio(successResponse.data)
-        console.log('Response Data:', successResponse.data)
-      }
-    }
-  }
-
   const handleDownload = async () => {
     if (token) {
       const successResponse = await getPortfolioFile(token)
@@ -129,12 +120,12 @@ const PortfolioSection = () => {
             <div className='bg-gray-100 flex w-full justify-center text-gray-700 pt-20 mt-10'>
               <div className='flex flex-1 flex-col md:flex-row max-w-7xl items-center justify-start px-5 md:px-20 xl:px-10 py-10'>
                 <div className='flex-1 mx-4 text-gray-700'>
-                  <div className='text-start mx-auto md:w-[80%]'>
+                  <div className='text-start mx-auto md:w-[84%] pl-5'>
                     <div className='bg-white border border-gray-200 rounded-lg p-10 shadow-lg overflow-hidden'>
                       {Object.entries(groupedPortfolio).map(
                         ([sector, items]) => (
                           <div key={sector}>
-                            <h2 className='text-xl font-bold border-b-2 pb-1 mb-5'>
+                            <h2 className='text-xl font-bold pb-1 pt-3 mb-4 ml-3 text-blue-600'>
                               {sector}
                             </h2>
                             {items.map(item => (
@@ -227,24 +218,19 @@ const PortfolioSection = () => {
                           </div>
                         ),
                       )}
-                      <div className='flex'>
+                      <div className='flex flex-1 justify-end'>
                         <Button
                           onClick={handleSave}
                           className='mt-4 mr-1 bg-blue-600 hover:bg-blue-700'
                         >
-                          Save
+                          Save Changes
                         </Button>
                         <Button
                           onClick={handleDownload}
                           className='mt-4 mr-1 bg-blue-600 hover:bg-blue-700'
                         >
+                          <FaFilePdf className='mr-1 pt-1' />
                           Download
-                        </Button>
-                        <Button
-                          onClick={handleMakePortfolio}
-                          className='mt-4 bg-blue-600 hover:bg-blue-700'
-                        >
-                          Make New
                         </Button>
                       </div>
                     </div>

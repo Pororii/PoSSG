@@ -50,7 +50,9 @@ const Recommend = () => {
                       {job.split('이유:')[0]}
                     </span>
                   </strong>
-                  <p className='mt-2 mb-5'>{job.split('이유:')[1]}</p>
+                  <p className='mt-3 mb-4 text-justify'>
+                    {job.split('이유:')[1]}
+                  </p>
                   {index < recommend.length - 1 && <hr />}
                 </div>
               ))}

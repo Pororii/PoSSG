@@ -159,7 +159,7 @@ const ProjectDetail = () => {
         }
       } catch (error) {
         console.error('Error fetching folder portfolio:', error)
-        setFolderPortfolio(null)
+        fetchFiles()
       }
     }
 

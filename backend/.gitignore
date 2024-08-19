@@ -1,0 +1,4 @@
+config/my_settings.py
+possg/views_b.py
+*.pyc
+possg/tempCodeRunnerFile.py

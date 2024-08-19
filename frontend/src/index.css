@@ -4,9 +4,9 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'PretendardVariable', 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'PretendardVariable',
+    'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -17,19 +17,14 @@ code {
 }
 
 @font-face {
-  font-family: "PretendardVariable";
-  src: url("./font/PretendardVariable.ttf") format("truetype");
+  font-family: 'PretendardVariable';
+  src: url('./font/PretendardVariable.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'seolleimcool-bold';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2312-1@1.1/seolleimcool-SemiBold.woff2') format('woff2');
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2312-1@1.1/seolleimcool-SemiBold.woff2')
+    format('woff2');
   font-weight: bold;
   font-style: normal;
-}
-
-@media (max-width: 1000px) {
-  .bottom-bar {
-      display: none;
-  }
 }

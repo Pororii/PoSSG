@@ -1,8 +1,9 @@
+/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
+    './src/**/*.{js,jsx,ts,tsx}',
+    'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     extend: {
@@ -18,17 +19,18 @@ module.exports = {
       },
       gradients: {
         'purple-pink': ['gradient-start', 'gradient-end'], // 그라디언트 커스텀 키
-      }
+      },
     },
     fontFamily: {
-      'PretendardVariable': ['PretendardVariable'],
-      'seoleim': ['seolleimcool-bold']
-    }
+      PretendardVariable: ['PretendardVariable'],
+      seoleim: ['seolleimcool-bold'],
+    },
   },
   plugins: [
-    require('flowbite/plugin'), require("tailwind-scrollbar-hide"),
+    require('flowbite/plugin'),
+    require('tailwind-scrollbar-hide'),
     require('@tailwindcss/forms'),
-    function({ addUtilities, theme }) {
+    function ({ addUtilities, theme }) {
       const newUtilities = {
         '.custom-gradient-hover': {
           '&:hover': {
@@ -38,8 +40,8 @@ module.exports = {
             '--tw-gradient-stops': `var(--tw-gradient-from), var(--tw-gradient-to, rgba(255, 255, 255, 0))`,
           },
         },
-      };
-      addUtilities(newUtilities, ['responsive', 'hover']);
-    }    
+      }
+      addUtilities(newUtilities, ['responsive', 'hover'])
+    },
   ],
 }

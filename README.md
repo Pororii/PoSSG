@@ -11,8 +11,16 @@ The project aims to summarize various types of files for same project, and find 
 
 <br>
 
+![슬라이드1](https://github.com/user-attachments/assets/c1c69bd7-d163-430d-845b-8e8688f10925)
+![슬라이드2](https://github.com/user-attachments/assets/54917c01-02fc-400d-a327-9d8080558b83)
+![슬라이드3](https://github.com/user-attachments/assets/a384b074-eec6-4b61-96f6-d8d2950725c4)
+![슬라이드4](https://github.com/user-attachments/assets/8a6d1746-a0cd-4133-a7af-6e2fcae84344)
+![슬라이드5](https://github.com/user-attachments/assets/9a43ab3f-8333-4b02-b740-e5baf705d77a)
+![슬라이드6](https://github.com/user-attachments/assets/f91ac5c4-53c5-4d3e-b0bf-2787dc3c438c)
+![슬라이드7](https://github.com/user-attachments/assets/9fb95833-c069-43c6-9ee5-fb34936abd32)
+![슬라이드8](https://github.com/user-attachments/assets/980adcb2-a224-4b03-82e1-836eabc3a2e2)
+![슬라이드9](https://github.com/user-attachments/assets/95b50e67-03e7-4b50-8cf6-d0369ed268f3)
 ![herosection_final](https://github.com/user-attachments/assets/40d7410b-b2a4-438f-8e35-3e4bec2c4b2b)
-
 <br>
 
 ## ⚙️ installation method
@@ -101,3 +109,6 @@ python manage.py runserver 0.0.0.0:8050
 </tr>
 </tbody>
 </table>
+
+## 💡 Demo Video
+[![Video Lable](http://img.youtube.com/vi/I6k5Pi3Q_Jg/0.jpg)](https://youtu.be/I6k5Pi3Q_Jg?si=4I3QFJ5D3gPAK9NF)

@@ -8,7 +8,7 @@ export const manageFolder = async (
   token: string,
   folderData: Folder,
 ): Promise<AxiosResponse<SuccessResponse> | null> => {
-  const response = await possgAxios.post('community/create', folderData, {
+  const response = await possgAxios.post('project/create', folderData, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response

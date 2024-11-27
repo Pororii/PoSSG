@@ -8,7 +8,7 @@ export const getMyProjectFiles = async (
   token: string,
   folder: MyFolder2,
 ): Promise<AxiosResponse<MyFolderDetail> | null> => {
-  const response = await possgAxios.post('community/files', folder, {
+  const response = await possgAxios.post('project/files', folder, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response

@@ -10,6 +10,10 @@ export interface EmailResponse {
   isExist: boolean
 }
 
+export interface PasswordResponse {
+  isCorrect: boolean
+}
+
 export interface EditInfo {
   nickname: string
   job: string
@@ -18,7 +22,13 @@ export interface EditInfo {
 export interface User {
   email: string
   nickname: string
+  university: string
+  major: string
+  secondMajor: string
+  period: number
+  semesterOff: boolean
   job: string
+  tags: string[]
 }
 
 export interface Users extends Array<User> {}
@@ -61,8 +71,8 @@ export interface MyFolder2 {
 export interface MyFolderDetail {
   sector: string
   title: string
+  memo: string
   files: FileData[]
-  folder_portfolio: string
 }
 
 export interface MyFolderDetail2 {

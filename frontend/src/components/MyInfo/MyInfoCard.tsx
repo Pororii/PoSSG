@@ -2,12 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import Modal from 'react-modal'
 import { useNavigate } from 'react-router-dom'
 
-import { postEditInfo } from '../../api/user/postEditInfo'
 import { useUserStore } from '../../stores/useUserStore'
-import {
-  saveUserToLocalStorage,
-  removeUserFromLocalStorage,
-} from '../../utils/localStorage'
+import { removeUserFromLocalStorage } from '../../utils/localStorage'
 
 const MyInfoCard = ({
   isOpen,
@@ -27,7 +23,6 @@ const MyInfoCard = ({
 
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [loggedIn] = useState<boolean>(!!localStorage.getItem('token'))
-  const token = localStorage.getItem('token')
 
   // UseEffect to initialize nickname and job when userInfo is available
   useEffect(() => {
@@ -66,23 +61,6 @@ const MyInfoCard = ({
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [isOpen, onRequestClose])
-
-  const handleSaveButtonClick = async () => {
-    if (token) {
-      const editInfoResult = await postEditInfo(token, nickname, job)
-      if (editInfoResult?.data) {
-        const updatedUserInfo = {
-          ...userInfo,
-          nickname,
-          job,
-          email: userInfo?.email || '',
-        }
-        setUserInfo(updatedUserInfo)
-        saveUserToLocalStorage(updatedUserInfo)
-        setIsEditing(false)
-      }
-    }
-  }
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -134,10 +112,7 @@ const MyInfoCard = ({
                   onChange={e => setJob(e.target.value)}
                   className='text-gray-500 mb-4 border rounded px-2 py-1 w-full'
                 />
-                <button
-                  className='bg-blue-500 text-white py-1 rounded hover:bg-blue-600 w-full'
-                  onClick={handleSaveButtonClick}
-                >
+                <button className='bg-blue-500 text-white py-1 rounded hover:bg-blue-600 w-full'>
                   Save
                 </button>
               </>

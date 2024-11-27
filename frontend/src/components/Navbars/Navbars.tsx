@@ -94,19 +94,26 @@ const Navbars: React.FC = () => {
             src='/img/logo_black.png'
           />
           <span className='self-center whitespace-nowrap text-xl dark:text-white'>
-            PoSSG
+            포쓱
           </span>
         </Navbar.Brand>
         <div className='flex items-center mr-auto gap-x-4 ml-12 list-none'>
           <Navbar.Link theme={theme} href='/' className={getButtonStyle('/')}>
-            Project
+            로드맵
+          </Navbar.Link>
+          <Navbar.Link
+            theme={theme}
+            href='/project'
+            className={getButtonStyle('/project')}
+          >
+            프로젝트
           </Navbar.Link>
           <Navbar.Link
             theme={theme}
             href='/portfolio'
             className={getButtonStyle('/portfolio')}
           >
-            Portfolio
+            포트폴리오
           </Navbar.Link>
         </div>
         <div className='flex items-center ml-auto gap-x-4 mr-10 list-none'>
@@ -156,7 +163,7 @@ const Navbars: React.FC = () => {
                 }`}
                 onClick={handleLoginButtonClick}
               >
-                Login
+                로그인
               </Button>
             </Navbar.Link>
           )}

@@ -1,155 +1,121 @@
-import { Button, Modal } from 'flowbite-react'
-import React, { useState, useEffect } from 'react'
-import { HiOutlineExclamationCircle } from 'react-icons/hi'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
 
-import { checkEmail } from '../../api/user/postCheckEmail'
+import KeywordInput from './components/KeywordInput'
+import { postCheckEmailNumber } from '../../api/user/postCheckEmailNumber'
+import { postCheckEmailSend } from '../../api/user/postCheckEmailSend'
 import { register } from '../../api/user/postRegister'
 
 const Register = () => {
-  const [openModal, setOpenModal] = useState(false)
-  const [openFailModal, setOpenFailModal] = useState(false)
-  const [signupForm, setSignupForm] = useState({
-    email: '',
-    nickname: '',
-    job: '',
-    password: '',
-    checkedPassword: '',
-  })
+  const [email, setEmail] = useState<string>('')
+  const [verificationCode, setVerificationCode] = useState<string>('')
+  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false)
+  const [password, setPassword] = useState<string>('')
+  const [checkedPassword, setCheckedPassword] = useState<string>('')
+  const [nickname, setNickname] = useState<string>('')
+  const [university, setUniversity] = useState<string>('')
+  const [major, setMajor] = useState<string>('')
+  const [secondMajor, setSecondMajor] = useState<string>('')
+  const [period, setPeriod] = useState<number>(1)
+  const [semesterOff, setSemesterOff] = useState<boolean>(false)
+  const [job, setJob] = useState<string>('')
+  const [tags, setTags] = useState<string[]>([])
+  const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
-  // 오류 메세지
-  const [validMessage, setValidMessage] = useState({
-    emailMessage: '',
-    nicknameMessage: '',
-    passwordMessage: '',
-    checkedPasswordMessage: '',
-  })
-
-  // 유효성 검사
-  const [isValid, setIsValid] = useState({
-    email: false,
-    nickname: false,
-    password: false,
-    checkedPassword: false,
-  })
-
-  const navigate = useNavigate()
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setSignupForm({ ...signupForm, [name]: value })
-  }
-
-  const handleCheckEmail = async () => {
-    const emailResult = await checkEmail(signupForm.email)
-
-    if (emailResult?.data.isExist === true) {
-      // 이메일 중복
-      setValidMessage(prev => ({
-        ...prev,
-        emailMessage: 'The email is unavailable.',
-      }))
-      setIsValid({ ...isValid, checkedPassword: false })
-    } else if (emailResult?.data.isExist == false) {
-      // 이메일 사용 가능
-      setValidMessage(prev => ({
-        ...prev,
-        emailMessage: 'The email is available.',
-      }))
-      setIsValid({ ...isValid, checkedPassword: true })
-    } else {
-      // 기타 상황
-      setValidMessage(prev => ({
-        ...prev,
-        emailMessage: 'Please try again in a moment.',
-      }))
-      setIsValid({ ...isValid, checkedPassword: false })
+  const handleEmailVerificationSend = async () => {
+    try {
+      const response = await postCheckEmailSend(email)
+      if (response) {
+        alert('인증번호가 이메일로 전송되었습니다.')
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('오류 메시지:', error.message)
+      }
     }
   }
 
-  // 닉네임 유효성 검사
-  useEffect(() => {
-    const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,10}$/
-
-    if (!regex.test(signupForm.nickname)) {
-      setValidMessage(prev => ({
-        ...prev,
-        nicknameMessage: 'Please enter 2 or more and 10 or less characters.',
-      }))
-      setIsValid({ ...isValid, nickname: false })
-    } else {
-      setValidMessage(prev => ({
-        ...prev,
-        nicknameMessage: 'The nickname is available.',
-      }))
-      setIsValid({ ...isValid, nickname: true })
+  const handleVerifyCode = async () => {
+    try {
+      const response = await postCheckEmailNumber(email, verificationCode)
+      if (response) {
+        setIsEmailVerified(true)
+        alert('인증번호가 확인되었습니다.')
+      }
+    } catch (error) {
+      console.error(error)
+      alert('인증번호 확인에 실패했습니다.')
     }
-  }, [signupForm.nickname])
+  }
 
-  // 비밀번호 유효성 검사
-  useEffect(() => {
-    const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,15}$/
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {}
+    if (!email) newErrors.email = '* 필수 항목입니다.'
+    if (!verificationCode || !isEmailVerified)
+      newErrors.verificationCode = '* 이메일 인증이 필요합니다.'
+    if (!password) newErrors.password = '* 필수 항목입니다.'
+    if (!nickname) newErrors.nickname = '* 필수 항목입니다.'
+    if (!university) newErrors.university = '* 필수 항목입니다.'
+    if (!major) newErrors.major = '* 필수 항목입니다.'
+    if (!job) newErrors.job = '* 필수 항목입니다.'
+    if (tags.length < 1) newErrors.tags = '* 최소 1개의 태그를 입력해야 합니다.'
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
-    if (!regex.test(signupForm.password)) {
-      setValidMessage(prev => ({
-        ...prev,
-        passwordMessage:
-          'Please enter at least 8 characters, including numbers, letters, and special characters.',
-      }))
-      setIsValid({ ...isValid, password: false })
-    } else {
-      setValidMessage(prev => ({
-        ...prev,
-        passwordMessage: '',
-      }))
-      setIsValid({ ...isValid, password: true })
-    }
-  }, [signupForm.password])
-
-  // 비밀번호 확인
-  useEffect(() => {
-    if (signupForm.password !== signupForm.checkedPassword) {
-      setValidMessage(prev => ({
-        ...prev,
-        checkedPasswordMessage: 'The passwords do not match.',
-      }))
-      setIsValid({ ...isValid, checkedPassword: false })
-    } else {
-      setValidMessage(prev => ({
-        ...prev,
-        checkedPasswordMessage: '',
-      }))
-      setIsValid({ ...isValid, checkedPassword: true })
-    }
-  }, [signupForm.password, signupForm.checkedPassword])
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (isValid) {
-      const registerResult = await register(
-        signupForm.email,
-        signupForm.password,
-        signupForm.nickname,
-        signupForm.job,
-      )
+    if (!validate()) return
 
-      if (registerResult) {
-        setOpenModal(true)
-      } else {
-        setOpenFailModal(false)
-        console.error('register fail')
+    const payload = {
+      email,
+      password,
+      nickname,
+      university,
+      major,
+      secondMajor,
+      period,
+      semesterOff,
+      job,
+      tags,
+    }
+
+    console.log('Payload for backend:', payload)
+
+    try {
+      const response = await register(
+        email,
+        password,
+        nickname,
+        university,
+        major,
+        secondMajor,
+        period,
+        semesterOff,
+        job,
+        tags,
+      )
+      if (response) {
+        alert('회원가입이 성공적으로 완료되었습니다!')
       }
-    } else {
-      setOpenFailModal(false)
-      console.error('register fail')
-      return
+    } catch (error) {
+      console.error(error)
+      alert('회원가입에 실패했습니다.')
     }
   }
-
-  const handleSuccessPopUp = () => {
-    setOpenModal(false)
-    if (!openFailModal) navigate('/login')
+  const convertPeriodToNumber = (selectedPeriod: string): number => {
+    const mapping: { [key: string]: number } = {
+      '1-1': 1,
+      '1-2': 2,
+      '2-1': 3,
+      '2-2': 4,
+      '3-1': 5,
+      '3-2': 6,
+      '4-1': 7,
+      '4-2': 8,
+      기타: 9,
+    }
+    return mapping[selectedPeriod]
   }
 
   return (
@@ -183,87 +149,198 @@ const Register = () => {
                     onSubmit={handleSubmit}
                   >
                     <div className='relative'>
-                      <p className='mb-1 ml-1 text-sm'>Email</p>
+                      <p className='mb-1 ml-1 text-sm'>이메일</p>
                       <input
                         type='email'
                         name='email'
                         id='email'
-                        value={signupForm.email}
-                        onChange={handleChange}
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
                         className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                        placeholder='Type your email'
+                        placeholder='이메일을 입력하세요'
                         required
                       />
+                      {errors.email && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.email}
+                        </p>
+                      )}
                       <button
                         type='button'
                         className='absolute right-3 top-10 w-15 bg-blue-600 text-white text-xs font-normal rounded-md py-1 px-2 transition duration-200 ease-in-out cursor-pointer'
-                        onClick={handleCheckEmail}
+                        onClick={handleEmailVerificationSend}
                       >
-                        Check
+                        인증
                       </button>
-                      <p className={`text-gray-500 sm:text-sm ml-2 mt-1`}>
-                        {validMessage.emailMessage}
-                      </p>
                     </div>
+
+                    <div className='mb-4'>
+                      <p className='mb-1 ml-1 text-sm'>인증번호</p>
+                      <input
+                        type='text'
+                        value={verificationCode}
+                        onChange={e => setVerificationCode(e.target.value)}
+                        className='w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500'
+                      />
+                      {errors.verificationCode && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.verificationCode}
+                        </p>
+                      )}
+                      <button
+                        type='button'
+                        onClick={handleVerifyCode}
+                        className='mt-2 px-4 py-2 bg-blue-500 text-white text-xs rounded-md hover:bg-blue-600'
+                      >
+                        인증번호 확인
+                      </button>
+                    </div>
+
                     <div className='relative'>
-                      <p className='mb-1 ml-1 text-sm'>Nickname</p>
+                      <p className='mb-1 ml-1 text-sm'>닉네임</p>
                       <input
                         type='text'
                         name='nickname'
                         id='nickname'
-                        value={signupForm.nickname}
-                        onChange={handleChange}
+                        value={nickname}
+                        onChange={e => setNickname(e.target.value)}
                         maxLength={10}
                         className={`bg-gray-50 border border-gray-300 text-gray-800 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-                        placeholder='Type your nickname'
+                        placeholder='닉네임을 입력해주세요'
                         required
                       />
-                      <p className={`text-gray-500 sm:text-sm ml-2 mt-1`}>
-                        {validMessage.nicknameMessage}
-                      </p>
+                      {errors.nickname && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.nickname}
+                        </p>
+                      )}
                     </div>
                     <div className='relative'>
-                      <p className='mb-1 ml-1 text-sm'>Preferred job</p>
+                      <p className='mb-1 ml-1 text-sm'>대학교</p>
                       <input
                         type='text'
-                        name='job'
-                        id='job'
-                        value={signupForm.job}
-                        onChange={handleChange}
-                        maxLength={20}
-                        className={`bg-gray-50 border border-gray-300 text-gray-800 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-                        placeholder='Please enter your preferred job if you have one'
+                        value={university}
+                        onChange={e => setUniversity(e.target.value)}
+                        className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                        placeholder='대학교를 입력하세요'
+                      />
+                      {errors.university && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.university}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Major Field */}
+                    <div className='relative'>
+                      <p className='mb-1 ml-1 text-sm'>전공</p>
+                      <input
+                        type='text'
+                        value={major}
+                        onChange={e => setMajor(e.target.value)}
+                        className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                        placeholder='전공을 입력하세요'
+                      />
+                      {errors.major && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.major}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Second Major Field */}
+                    <div className='relative'>
+                      <p className='mb-1 ml-1 text-sm'>복수전공</p>
+                      <input
+                        type='text'
+                        value={secondMajor}
+                        onChange={e => setSecondMajor(e.target.value)}
+                        className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                        placeholder='복수 전공을 입력하세요'
                       />
                     </div>
+
+                    {/* Period Field */}
+                    <div className='relative'>
+                      <p className='mb-1 ml-1 text-sm'>학기</p>
+                      <select
+                        value={period}
+                        onChange={e =>
+                          setPeriod(convertPeriodToNumber(e.target.value))
+                        }
+                        className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                      >
+                        <option value='1-1'>1학년 1학기</option>
+                        <option value='1-2'>1학년 2학기</option>
+                        <option value='2-1'>2학년 1학기</option>
+                        <option value='2-2'>2학년 2학기</option>
+                        <option value='3-1'>3학년 1학기</option>
+                        <option value='3-2'>3학년 2학기</option>
+                        <option value='4-1'>4학년 1학기</option>
+                        <option value='4-2'>4학년 2학기</option>
+                        <option value='기타'>기타</option>
+                      </select>
+                    </div>
+
+                    {/* Semester Off Field */}
+                    <div className='relative'>
+                      <p className='mb-1 ml-1 text-sm'>휴학 여부</p>
+                      <select
+                        value={semesterOff ? 'yes' : 'no'}
+                        onChange={e => setSemesterOff(e.target.value === 'yes')}
+                        className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                      >
+                        <option value='no'>아니요</option>
+                        <option value='yes'>예</option>
+                      </select>
+                    </div>
+
+                    {/* Job Field */}
+                    <div className='relative'>
+                      <p className='mb-1 ml-1 text-sm'>희망직무</p>
+                      <input
+                        type='text'
+                        value={job}
+                        onChange={e => setJob(e.target.value)}
+                        className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                        placeholder='희망 직무를 입력하세요'
+                      />
+                      {errors.job && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.job}
+                        </p>
+                      )}
+                    </div>
+
                     <div>
-                      <p className='mb-1 ml-1 text-sm'>Password</p>
+                      <p className='mb-1 ml-1 text-sm'>비밀번호</p>
                       <input
                         type='password'
                         name='password'
                         id='password'
-                        value={signupForm.password}
-                        onChange={handleChange}
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
                         placeholder='8 to 20 digits including English characters, numbers, and special characters'
                         className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                         required
                       />
-                      <p className='text-red-500 sm:text-sm ml-2 mt-1 mb-2'>
-                        {validMessage.passwordMessage}
-                      </p>
                       <input
                         type='password'
                         name='checkedPassword'
                         id='checkedPassword'
                         placeholder='Confirm Password'
-                        value={signupForm.checkedPassword}
-                        onChange={handleChange}
+                        value={checkedPassword}
+                        onChange={e => setCheckedPassword(e.target.value)}
                         className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                         required
                       />
-                      <p className='text-red-500 sm:text-sm ml-2 mt-1'>
-                        {validMessage.checkedPasswordMessage}
-                      </p>
                     </div>
+
+                    <KeywordInput keywords={tags} setKeywords={setTags} />
+                    {errors.tags && (
+                      <p className='text-red-500 text-sm mt-1'>{errors.tags}</p>
+                    )}
+
                     <br />
                     <div className='flex items-start'>
                       <div className='flex items-center h-5'>
@@ -292,18 +369,17 @@ const Register = () => {
                     </div>
                     <button
                       type='submit'
-                      onClick={() => setOpenModal(true)}
                       className='w-full flex justify-center rounded-lg bg-blue-600 py-3 px-4 text-lg font-semibold leading-tight text-white shadow-md transition duration-200 ease-in-out cursor-pointer mb-2'
                     >
-                      Sign Up
+                      회원가입
                     </button>
                     <p className='mt-10 text-center text-sm text-gray-500'>
-                      Already have an account?&nbsp;&nbsp;&nbsp;
+                      이미 계정이 있나요?&nbsp;&nbsp;&nbsp;
                       <a
                         href='/login'
                         className='font-semibold text-primary-600 hover:underline dark:text-primary-500'
                       >
-                        Log in
+                        로그인
                       </a>
                     </p>
                   </form>
@@ -313,37 +389,6 @@ const Register = () => {
           </div>
         </section>
       </div>
-
-      <Modal
-        show={openModal}
-        size='md'
-        onClose={() => setOpenModal(false)}
-        popup
-      >
-        <div className='fixed top-20 left-0 w-full h-full bg-gray-500 bg-opacity-60'></div>
-        <div className='flex items-center justify-center fixed inset-0 opacity-100'>
-          <div className='z-10 bg-white rounded-lg border-solid border-black-500 p-70 flex flex-col justify-center items-center'>
-            <Modal.Body>
-              <div className='text-center px-10'>
-                <HiOutlineExclamationCircle className='mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-black-200' />
-                <h3 className='mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 shadow-3xl'>
-                  {openFailModal
-                    ? 'Failed to sign up for membership'
-                    : 'Welcome to being a member of PoSSG!'}
-                </h3>
-                <div className='flex justify-center gap-4'>
-                  <Button
-                    className='bg-gray-100 text-black w-20 hover:bg-blue-600 hover:text-white'
-                    onClick={handleSuccessPopUp}
-                  >
-                    Check
-                  </Button>
-                </div>
-              </div>
-            </Modal.Body>
-          </div>
-        </div>
-      </Modal>
     </>
   )
 }

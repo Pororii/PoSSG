@@ -9,7 +9,7 @@ export const editPortfolio = async (
   portfolio: MyPortfolio,
 ): Promise<AxiosResponse<SuccessResponse> | null> => {
   const response = await possgAxios.post(
-    'community/edit-portfolio',
+    'portfolio/edit-portfolio',
     portfolio,
     {
       headers: { Authorization: `Bearer ${token}` },

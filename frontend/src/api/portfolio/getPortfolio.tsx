@@ -6,7 +6,7 @@ import { possgAxios } from '../axiosInstance'
 // 내 포트폴리오 반환
 export const getPortfolio = async (token: string): Promise<PortfolioItem[]> => {
   const response: AxiosResponse<MyPortfolio> = await possgAxios.get(
-    'community/total-portfolio',
+    'portfolio/total-portfolio',
     {
       headers: { Authorization: `Bearer ${token}` },
     },

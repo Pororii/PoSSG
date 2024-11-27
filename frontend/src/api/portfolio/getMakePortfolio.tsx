@@ -7,7 +7,7 @@ import { possgAxios } from '../axiosInstance'
 export const makePortfolio = async (
   token: string,
 ): Promise<AxiosResponse<MyPortfolio> | null> => {
-  const response = await possgAxios.get('community/make-portfolio', {
+  const response = await possgAxios.get('portfolio/make-portfolio', {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response

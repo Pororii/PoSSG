@@ -7,7 +7,7 @@ import { possgAxios } from '../axiosInstance'
 export const getRecommend = async (
   token: string,
 ): Promise<AxiosResponse<SuccessResponse> | null> => {
-  const response = await possgAxios.get('community/recommend', {
+  const response = await possgAxios.get('portfolio/recommend', {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response

@@ -6,6 +6,7 @@ import Home from './pages/HomePage/Home'
 import Login from './pages/LoginPage/Login'
 import Portfolio from './pages/PortfolioPage/Portfolio'
 import ProjectDetail from './pages/ProjectDetailPage/ProjectDetail'
+import Project from './pages/ProjectPage/Project'
 import Register from './pages/RegisterPage/Register'
 
 const router = createBrowserRouter([
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: 'register',
         element: <Register />,
+      },
+      {
+        path: 'project',
+        element: <Project />,
       },
       {
         path: 'project-detail/:sector/:folderName',

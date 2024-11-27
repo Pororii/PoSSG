@@ -8,15 +8,11 @@ export const uploadThumbnail = async (
   token: string,
   formData: FormData,
 ): Promise<AxiosResponse<SuccessResponse> | null> => {
-  const response = await possgAxios.post(
-    'community/thumbnail-upload',
-    formData,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
+  const response = await possgAxios.post('project/thumbnail-upload', formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
     },
-  )
+  })
   return response
 }

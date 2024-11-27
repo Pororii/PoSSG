@@ -1,13 +1,11 @@
-import { Banner, Button, Spinner } from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { FaWandMagicSparkles } from 'react-icons/fa6'
-import { HiX } from 'react-icons/hi'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { useParams } from 'react-router-dom'
 
 import ProjectFile from './components/ProjectFile'
 import ProjectPreview from './components/ProjectPreview'
-import { getFolderPortfolio } from '../../api/project/postFolderSummary'
 import { getMyProjectFiles } from '../../api/project/postMyProjectFiles'
 import { uploadProjectFiles } from '../../api/project/postProjectFiles'
 // import { useFolderStore } from '../../stores/useFolderStore'
@@ -25,11 +23,8 @@ const ProjectDetail = () => {
   const [fileFinals, setFileFinals] = useState<
     { file: File; preview: string; name: string }[]
   >([])
-  const [folderPortfolio, setFolderPortfolio] = useState<string | null>(null)
   const [showPopup, setShowPopup] = useState<boolean>(false)
   const [containerWidth, setContainerWidth] = useState<number>(0)
-  const [showDetails, setShowDetails] = useState(false)
-  const [isLoadingSummary, setIsLoadingSummary] = useState<boolean>(false)
   const [, setIsLoading] = useState<boolean>(false)
 
   const popupRef = useRef<HTMLDivElement>(null)
@@ -54,10 +49,6 @@ const ProjectDetail = () => {
       />
     </svg>
   )
-
-  const toggleDetails = () => {
-    setShowDetails(!showDetails)
-  }
 
   const handleDragStart = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault()
@@ -146,24 +137,7 @@ const ProjectDetail = () => {
   }
 
   const handleSummaryButtonClick = async () => {
-    setIsLoadingSummary(true)
-
-    if (token) {
-      try {
-        const folderPortfolioResponse = await getFolderPortfolio(token, folder)
-
-        if (folderPortfolioResponse && folderPortfolioResponse.data.summary) {
-          setFolderPortfolio(folderPortfolioResponse.data.summary)
-        } else {
-          setFolderPortfolio(null)
-        }
-      } catch (error) {
-        console.error('Error fetching folder portfolio:', error)
-        fetchFiles()
-      }
-    }
-
-    setIsLoadingSummary(false)
+    //
   }
 
   const fetchFiles = async () => {
@@ -175,10 +149,6 @@ const ProjectDetail = () => {
       if (successResponse && successResponse.data) {
         if (successResponse.data.files.length > 0) {
           setExist(true)
-        }
-
-        if (successResponse.data.folder_portfolio) {
-          setFolderPortfolio(successResponse.data.folder_portfolio)
         }
 
         const files = successResponse.data.files.map(({ file, src }) => ({
@@ -249,67 +219,6 @@ const ProjectDetail = () => {
                     Upload
                   </button>
                 </div>
-              </div>
-              <div className='mt-3'>
-                {isLoadingSummary ? (
-                  <div className='flex justify-center items-center p-4 bg-gray-100 rounded-2xl shadow mb-4 font-semibold'>
-                    <Spinner aria-label='Loading spinner' className='mr-3' />
-                    <span>Loading, please wait a moment.</span>
-                  </div>
-                ) : folderPortfolio ? (
-                  <>
-                    <button
-                      className='border-0 bg-blue-500 text-white text-lg p-2 rounded-xl font-semibold'
-                      style={{ width: containerWidth }}
-                      onClick={toggleDetails}
-                    >
-                      Check summary information of my folder!
-                    </button>
-                    {showDetails && (
-                      <div className='pl-10 pr-10 pt-3 pb-3 bg-gray-100 rounded-xl shadow mb-4'>
-                        {/* <div className='mt-3' style={{ width: containerWidth }}> */}
-                        <span
-                          className='block text-sm'
-                          style={{ width: '100%', textAlign: 'justify' }}
-                        >
-                          {folderPortfolio}
-                        </span>
-                      </div>
-                      // </div>
-                    )}
-                  </>
-                ) : (
-                  <Banner className='ml-3 mr-3'>
-                    <div className='flex w-full flex-col justify-between bg-blue-100 rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-600 dark:bg-gray-700 md:flex-row lg:max-w-7xl'>
-                      <div className='mb-3 mr-4 flex flex-col items-start md:mb-0 md:flex-row md:items-center'>
-                        <div className='mb-2 flex items-center border-gray-200 dark:border-gray-600 md:mb-0 md:mr-4 md:border-r md:pr-4'>
-                          <img
-                            src='/img/logo_black.png'
-                            className='ml-5 mr-3 h-6'
-                            alt='logo'
-                          />
-                        </div>
-                        <p className='flex items-center text-sm font-normal text-gray-800 dark:text-gray-400'>
-                          Check the summary of the materials I just uploaded!
-                        </p>
-                      </div>
-                      <div className='flex shrink-0 items-center'>
-                        <Button
-                          onClick={handleSummaryButtonClick}
-                          className='bg-blue-500 font-semibold'
-                        >
-                          Get started!
-                        </Button>
-                        <Banner.CollapseButton
-                          color='gray'
-                          className='border-0 bg-transparent text-gray-500 dark:text-gray-400'
-                        >
-                          <HiX className='h-4 w-4' />
-                        </Banner.CollapseButton>
-                      </div>
-                    </div>
-                  </Banner>
-                )}
               </div>
               <div className='mt-5'>
                 <div className='grid grid-cols-1 md:grid-cols-5 gap-2 ml-3 mr-3 mt-5 mb-5'>

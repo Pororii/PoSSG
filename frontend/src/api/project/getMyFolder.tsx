@@ -7,7 +7,7 @@ import { possgAxios } from '../axiosInstance'
 export const getMyFolder = async (
   token: string,
 ): Promise<AxiosResponse<MySectors> | null> => {
-  const response = await possgAxios.get('community/folder', {
+  const response = await possgAxios.get('project/folder', {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response

@@ -8,7 +8,7 @@ export const deleteFile = async (
   token: string,
   fileData: MyFolderDetail2,
 ): Promise<AxiosResponse<SuccessResponse> | null> => {
-  const response = await possgAxios.post('community/file-remove', fileData, {
+  const response = await possgAxios.post('project/file-remove', fileData, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response

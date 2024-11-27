@@ -3,28 +3,14 @@ import { AxiosResponse } from 'axios'
 import { SuccessResponse } from '../../interfaces/Interfaces'
 import { possgAxios } from '../axiosInstance'
 
-export const postEditInfo = async (
+export const postChangePassword = async (
   token: string,
-  nickname: string,
-  university: string,
-  major: string,
-  secondMajor: string,
-  period: number,
-  semesterOff: boolean,
-  job: string,
-  tags: string[],
+  password: string,
 ): Promise<AxiosResponse<SuccessResponse> | null> => {
   const response = await possgAxios.post(
-    'members/edit',
+    'members/change-password',
     {
-      nickname,
-      university,
-      major,
-      secondMajor,
-      period,
-      semesterOff,
-      job,
-      tags,
+      password,
     },
     { headers: { Authorization: `Bearer ${token}` } },
   )

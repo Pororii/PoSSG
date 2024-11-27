@@ -1,11 +1,9 @@
 import { Button } from 'flowbite-react'
 import { useEffect, useState } from 'react'
-import { FaFilePdf } from 'react-icons/fa6'
 import { useMutation, useQueryClient } from 'react-query'
 
 import { makePortfolio } from '../../../api/portfolio/getMakePortfolio'
 import { getPortfolio } from '../../../api/portfolio/getPortfolio'
-import { getPortfolioFile } from '../../../api/portfolio/getPortfolioFile'
 import { editPortfolio } from '../../../api/portfolio/postEditPortfolio'
 import Loading from '../../../components/Loading/Loading'
 import { GroupedPortfolio } from '../../../interfaces/Interfaces'
@@ -85,29 +83,6 @@ const PortfolioSection = () => {
 
   const handleSave = () => {
     editMutation.mutate()
-  }
-
-  const handleDownload = async () => {
-    if (token) {
-      const successResponse = await getPortfolioFile(token)
-      if (successResponse && successResponse.data) {
-        const fileData = successResponse.data
-
-        const blob = new Blob([fileData], { type: 'application/pdf' }) // 파일 유형에 따라 'application/pdf', 'image/png' 등
-        const url = URL.createObjectURL(blob)
-
-        // 임시 다운로드 링크 생성
-        const a = document.createElement('a')
-        a.href = url
-        a.download = 'portfolio.pdf' // 파일 이름과 확장자
-        document.body.appendChild(a)
-        a.click()
-
-        // 링크 제거 및 URL 메모리 해제
-        document.body.removeChild(a)
-        URL.revokeObjectURL(url)
-      }
-    }
   }
 
   return (
@@ -224,13 +199,6 @@ const PortfolioSection = () => {
                           className='mt-4 mr-1 bg-blue-600 hover:bg-blue-700'
                         >
                           Save Changes
-                        </Button>
-                        <Button
-                          onClick={handleDownload}
-                          className='mt-4 mr-1 bg-blue-600 hover:bg-blue-700'
-                        >
-                          <FaFilePdf className='mr-1 pt-1' />
-                          Download
                         </Button>
                       </div>
                     </div>

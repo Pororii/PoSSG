@@ -103,19 +103,30 @@ const Register = () => {
       alert('회원가입에 실패했습니다.')
     }
   }
+  // 양방향 매핑 객체
+  const periodMapping: { [key: string]: number } = {
+    '1-1': 1,
+    '1-2': 2,
+    '2-1': 3,
+    '2-2': 4,
+    '3-1': 5,
+    '3-2': 6,
+    '4-1': 7,
+    '4-2': 8,
+    기타: 9,
+  }
+
+  // 숫자를 문자열로 변환하는 함수
+  const convertNumberToPeriod = (number: number): string => {
+    return (
+      Object.keys(periodMapping).find(key => periodMapping[key] === number) ||
+      '1-1'
+    )
+  }
+
+  // 문자열을 숫자로 변환하는 함수
   const convertPeriodToNumber = (selectedPeriod: string): number => {
-    const mapping: { [key: string]: number } = {
-      '1-1': 1,
-      '1-2': 2,
-      '2-1': 3,
-      '2-2': 4,
-      '3-1': 5,
-      '3-2': 6,
-      '4-1': 7,
-      '4-2': 8,
-      기타: 9,
-    }
-    return mapping[selectedPeriod]
+    return periodMapping[selectedPeriod] ?? 1 // 기본값 처리
   }
 
   return (
@@ -264,10 +275,10 @@ const Register = () => {
                     <div className='relative'>
                       <p className='mb-1 ml-1 text-sm'>학기</p>
                       <select
-                        value={period}
+                        value={convertNumberToPeriod(period)} // 숫자를 문자열로 변환하여 value 설정
                         onChange={e =>
                           setPeriod(convertPeriodToNumber(e.target.value))
-                        }
+                        } // 문자열을 숫자로 변환하여 상태 업데이트
                         className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-96 p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                       >
                         <option value='1-1'>1학년 1학기</option>
